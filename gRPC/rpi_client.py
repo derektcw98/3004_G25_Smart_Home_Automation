@@ -14,53 +14,39 @@
 """The Python implementation of the GRPC helloworld.Greeter client."""
 
 from __future__ import print_function
+from concurrent.futures import thread
 
 import logging
+from time import sleep
 from urllib import request
 
 import grpc
-import bookReview_pb2
-import bookReview_pb2_grpc
-#TODO: import _pb2 and _pb2_grpc
+import rpi_pb2
+import rpi_pb2_grpc
+from sense_hat import SenseHat
 
-
+interval_duration = 1
 
 def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
     # used in circumstances in which the with sstatement does not fit the needs
     # of the code.
     with grpc.insecure_channel('localhost:50051') as channel:
-        stub = bookReview_pb2_grpc.BookReviewStub(channel)
+        stub = rpi_pb2_grpc.RPIStub(channel)
+        sense = SenseHat()
 
+        room = input("Enter a room name")
         while True:
-            print ("""
-
-            1. Add Book Review
-            2. Retrieve list of all books
-            3. Query review of book
-
-            """)
-
-            option = input("Enter an option number: ") 
-
-            if option=="1": 
-                bookInput = input("Enter Book Name: ") 
-                reviewInput = input("Enter Review: ") 
-                response = stub.addReview(bookReview_pb2.Request(book=bookInput, review=reviewInput))
-                print(str(response.res))
-
-            #  Regular user check out
-            elif option=="2":
-                response = stub.retrieveBooks(bookReview_pb2.RequestRetrieve())
-                print("These are the books in the review list: \n" + str(response.res))
-
-            elif option=="3":
-                bookInput = input("Enter Book Name: ") 
-                response = stub.queryReview(bookReview_pb2.RequestBookReview(book=bookInput))
-                print(response.res)
-
-            else:
-                print("\n Not Valid Choice Try again\n") 
+            temp = sense.get_temperature()
+            temp_calibrated = temp - ((cpu_temp - temp)/5.466)
+            humidity = sense.get_humidity()
+            room = ""
+            data = ""
+            response = stub.processRoomData(rpi_pb2.Request(room, data))
+            #set interval duration
+            print(str(response.res))
+            #sleep between sending of data
+            sleep(60 * interval_duration)
 
 
 if __name__ == '__main__':

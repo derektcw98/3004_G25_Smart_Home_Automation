@@ -19,31 +19,18 @@
 
 syntax = "proto3";
 
-package bookReview;
+package rpi;
 
 // The greeting service definition.
-service BookReview {
-  rpc addReview (Request) returns (Reply) {}
-  rpc retrieveBooks (Request) returns (Reply) {}
-  rpc queryReview (Request) returns (Reply) {}
+service RPI {
+  rpc processRoomData (Request) returns (Reply) {}
 }
 
 message Request {
-  string book = 1;
-  string review = 2;
-}
-
-message RequestRetrieve {
-}
-
-message RequestBookReview {
-  string book = 1;
+  string roomName = 1;
+  string data = 2;
 }
 
 message Reply {
   string res = 1;
 }
-// // The response message containing the greetings
-// message ReplyDivide {
-//   float res = 1;
-// }

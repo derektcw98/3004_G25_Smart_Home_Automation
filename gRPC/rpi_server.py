@@ -17,46 +17,25 @@ from concurrent import futures
 import logging
 
 import grpc
-import bookReview_pb2
-import bookReview_pb2_grpc
+import rpi_pb2
+import rpi_pb2_grpc
 
-reviewRecords = {}
+class RPI(rpi_pb2_grpc.RPIServicer):
 
-class BookReview(bookReview_pb2_grpc.BookReviewServicer):
+    def processRoomData(self, request, context):
+        #process data
+        
 
-    def addReview(self, request, context):
-        global reviewRecords
-        reviewString = "" #To Store existing array
-        if request.book not in reviewRecords.keys():
-            reviewRecords[request.book] = request.review
-        else:
-            for books in reviewRecords:
-                if books is request.book:
-                    reviewString = reviewRecords[request.book] #add original reviews in records
-                    reviewString += "\n" + request.review #add new review in new line
-                    reviewRecords[request.book] = reviewString 
-        print(reviewRecords)
-        return bookReview_pb2.Reply(res="Review for " + request.book + " has been added.")
+        interval = ""
+        command = ""
+        #set instructions to return to client
+        instructions = interval + "," + command
 
-    def retrieveBooks(self, request, context):
-        global reviewRecords
-        books = ""
-        for book in reviewRecords:
-            books += " " + str(book)
-            print(books)
-        return bookReview_pb2.Reply(res=books)
-
-    def queryReview(self, request, context):
-        global reviewRecords
-        if request.book not in reviewRecords:
-            return bookReview_pb2.Reply(res= "Book does not exist in records")
-        else:
-            return bookReview_pb2.Reply(res=request.book + " reviews are: \n" + reviewRecords[request.book])
-
+        return rpi_pb2.Reply(res=instructions)
 #basic step to run the server
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    bookReview_pb2_grpc.add_BookReviewServicer_to_server(BookReview(),server)
+    rpi_pb2_grpc.add_RPIServicer_to_server(RPI(),server)
     server.add_insecure_port('[::]:50051')
     server.start()
     server.wait_for_termination()
