@@ -36,6 +36,18 @@ print("CONFIGURATIONS:\n", configs)
 interval_duration = configs[0].replace('\n', '').split('=')
 room = configs[1].replace('\n', '').split('=')
 
+# Initiation of cached items
+client_log_json = {}
+
+def loadJson():
+    global client_log_json
+    # open file for reading, "r" 
+    
+    client_log_path = os.getcwd() + "\gRPC\client_log.json"
+    with open(client_log_path, "r") as file:
+        # load json object into dictionary
+        client_log_json = json.load(file)
+
 def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
     # used in circumstances in which the with sstatement does not fit the needs
@@ -45,7 +57,7 @@ def run():
 
         while True:
 
-            # 
+            
             data = ""
             response = stub.processRoomData(rpi_pb2.Request(room, data))
             #set interval duration
