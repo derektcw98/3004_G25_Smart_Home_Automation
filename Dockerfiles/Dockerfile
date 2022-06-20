@@ -1,0 +1,12 @@
+FROM alpine
+RUN apk update
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+
+COPY ./requirements.txt /requirements.txt
+RUN pip3 install -r /requirements.txt
+
+COPY ./grpc/calculator_client.py /grpc/calculator_client.py
+COPY ./grpc/calculator_pb2_grpc.py /grpc/calculator_pb2_grpc.py
+COPY ./grpc/calculator_pb2.py /grpc/calculator_pb2.py
+#RUN python3 ./grpc/calculator_client.py
