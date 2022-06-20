@@ -24,16 +24,17 @@ import rpi_pb2
 import rpi_pb2_grpc
 
 # Dynamic ip address and port
-ipaddr = "localhost"
+ipaddr = "[::]"
 port = "50051"
 
 try:
-    ipaddr = sys.argv[0]
-    port = sys.argv[1]
+    ipaddr = sys.argv[1]
+    port = sys.argv[2]
 except:
-    print("No arguments detected, using default: 'localhost:50051'")
+    print("No arguments detected, using default: '[::]:50051'")
 
 channel_to_use = ipaddr+":"+port
+print(channel_to_use)
 
 class RPI(rpi_pb2_grpc.RPIServicer):
 

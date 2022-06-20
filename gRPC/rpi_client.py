@@ -21,6 +21,7 @@ from time import sleep
 from urllib import request
 import os
 import sys
+import json
 
 import grpc
 import rpi_pb2
@@ -31,22 +32,22 @@ ipaddr = "localhost"
 port = "50051"
 
 try:
-    ipaddr = sys.argv[0]
-    port = sys.argv[1]
+    ipaddr = sys.argv[1]
+    port = sys.argv[2]
 except:
     print("No arguments detected, using default: 'localhost:50051'")
-
+    
 channel_to_use = ipaddr+":"+port
+print(channel_to_use)
 
 # Initiation of cached items
 client_log_json = {}
 
-def loadJson():
+def loadJson(path):
     global client_log_json
     # open file for reading, "r" 
     
-    client_log_path = os.getcwd() + "\gRPC\client_log.json"
-    with open(client_log_path, "r") as file:
+    with open(path, "r") as file:
         # load json object into dictionary
         client_log_json = json.load(file)
 
@@ -60,19 +61,22 @@ def run():
         while True:
             
             # Reading of Configurations File
-            config_file = os.getcwd() + "\gRPC\client_config.txt"
+            config_file = os.getcwd() + "\client_config.txt"
             f = open(config_file, "r")
             configs = f.readlines()
             f.close()
-            print("CONFIGURATIONS:\n", configs)
+            print("\n\n\nCONFIGURATIONS:\n", configs,'\n\n\n')
 
             # Assigning Configurations
-            interval_duration = configs[0].replace('\n', '').split('=')
-            room = configs[1].replace('\n', '').split('=')
+            interval_duration = str(configs[1]).replace('\n', '').split('=')
+            interval_duration = int(interval_duration[1])
+            room = str(configs[0]).replace('\n', '').split('=')
+            room = str(room[1])
 
             # Load data from JSON log and submit to server
-            data = loadJson()
-            response = stub.processRoomData(rpi_pb2.Request(room, data))
+            client_log_path = os.getcwd() + "\client_log.json"
+            data = loadJson(client_log_path)
+            response = stub.processRoomData(rpi_pb2.Request(roomName = room, data = data))
 
             # Server Instructions
             print(str(response.res))
