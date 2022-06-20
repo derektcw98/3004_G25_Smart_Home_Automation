@@ -65,7 +65,7 @@ def run():
             f = open(config_file, "r")
             configs = f.readlines()
             f.close()
-            print("\n\n\nCONFIGURATIONS:\n", configs,'\n\n\n')
+            print("CONFIGURATIONS:\n", configs)
 
             # Assigning Configurations
             interval_duration = str(configs[1]).replace('\n', '').split('=')
@@ -75,8 +75,16 @@ def run():
 
             # Load data from JSON log and submit to server
             client_log_path = os.getcwd() + "\client_log.json"
-            data = loadJson(client_log_path)
-            response = stub.processRoomData(rpi_pb2.Request(roomName = room, data = data))
+            with open(client_log_path, "r+") as file:
+            # try loading contents as a json dictionary
+                try:
+                    data = json.load(file)
+                    print("data: \n", data)
+                except:
+                    print("Empty Json File.")
+                file.close()
+
+            response = stub.processRoomData(rpi_pb2.Request(roomName = room, data = str(data)))
 
             # Server Instructions
             print(str(response.res))
