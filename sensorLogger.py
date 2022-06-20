@@ -28,22 +28,36 @@ def addEvent(date, device, state, temp, humidity):
   #creates file if it doesn't exists
   file = Path('events.json')
   file.touch(exist_ok=True)
-  #open file
-  with open('events.json', "a+") as file:
-    # load json object into dictionary
-    if file.readline is "":
-      file_data = json.load(file)
-      print(events)
-    else:
-      events = {}
-    if date not in events.keys():
-      events[date] = {device_state : state , "Room_Temperature" : temp, "Room_Humidity" : humidity}
-      data = json.dumps(events)
-      print(events)
-    # write json object to file
-    file.write(data)
-    # close file
-    file.close()
+  # Open json file
+  with open('events.json', "r+") as file:
+
+      # try loading contents as a json dictionary
+      try:
+          events = json.load(file)
+          print("initial json: \n", events)
+
+          # if date variable is not currently inside the keys of the dictionary
+          # add new key-value pair and overwrite the json file (additional 2 params are to beautify the json file)
+          try:
+              if date not in events.keys():
+                  events[date] = {device_state : state , "Room_Temperature" : temp, "Room_Humidity" : humidity}
+                  print("post json: \n", events)
+                  
+                  json.dump(events, open('events.json', "w"), indent=2, separators=(',', ': '))
+
+          # something somewhere fucked up
+          except:
+              print("Something Wrong.")
+
+      # exception occured, likely empty json
+      except:
+          print("Empty Json File.")
+          events = {}
+          events[date] = {device_state : state , "Room_Temperature" : temp, "Room_Humidity" : humidity}
+          json.dump(events, open('events.json', "w"), indent=2, separators=(',', ': '))
+      
+      # close the file
+      file.close()
 
 sense.clear()
 while True:
@@ -81,8 +95,6 @@ while True:
         Light_State = "Off"
       addEvent(formatted_now, "light", Light_State, temp_calibrated, humidity) 
     
-
-
     #print(event.direction, event.action)
     if event.action == "released":
       print("Light State: " + Light_State)
