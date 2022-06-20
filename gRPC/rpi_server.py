@@ -24,17 +24,18 @@ class RPI(rpi_pb2_grpc.RPIServicer):
 
     def processRoomData(self, request, context):
         #process data
-        
 
         interval = ""
         command = ""
+
         #set instructions to return to client
         instructions = interval + "," + command
 
         return rpi_pb2.Reply(res=instructions)
 
 
-        
+
+
 #basic step to run the server
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
@@ -42,7 +43,6 @@ def serve():
     server.add_insecure_port('[::]:50051')
     server.start()
     server.wait_for_termination()
-
 
 if __name__ == '__main__':
     logging.basicConfig()

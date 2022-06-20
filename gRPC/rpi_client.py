@@ -25,17 +25,6 @@ import grpc
 import rpi_pb2
 import rpi_pb2_grpc
 
-# Reading of Configurations File
-config_file = os.getcwd() + "\gRPC\client_config.txt"
-f = open(config_file, "r")
-configs = f.readlines()
-f.close()
-print("CONFIGURATIONS:\n", configs)
-
-# Assigning Configurations
-interval_duration = configs[0].replace('\n', '').split('=')
-room = configs[1].replace('\n', '').split('=')
-
 # Initiation of cached items
 client_log_json = {}
 
@@ -56,13 +45,25 @@ def run():
         stub = rpi_pb2_grpc.RPIStub(channel)
 
         while True:
-
             
-            data = ""
+            # Reading of Configurations File
+            config_file = os.getcwd() + "\gRPC\client_config.txt"
+            f = open(config_file, "r")
+            configs = f.readlines()
+            f.close()
+            print("CONFIGURATIONS:\n", configs)
+
+            # Assigning Configurations
+            interval_duration = configs[0].replace('\n', '').split('=')
+            room = configs[1].replace('\n', '').split('=')
+
+            data = loadJson()
             response = stub.processRoomData(rpi_pb2.Request(room, data))
-            #set interval duration
+
+            # (PLACEHOLDER FOR INSTRUCTIONS FROM SERVER)
             print(str(response.res))
-            #sleep between sending of data
+
+            # Sleep duration between sending of data
             sleep(interval_duration)
 
 
