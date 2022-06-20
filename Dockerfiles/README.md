@@ -1,4 +1,3 @@
-cd to this directory, remove the extension behind Dockerfile:
-eg. Dockerfile~~.client~~
+cd to this directory
 and run the following command:
-docker build -t client .
+docker build -f Dockerfile.client -t homeclient .
