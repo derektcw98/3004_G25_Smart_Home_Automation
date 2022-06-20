@@ -1,0 +1,2 @@
+room=bedroom_master
+interval_time(seconds)=60

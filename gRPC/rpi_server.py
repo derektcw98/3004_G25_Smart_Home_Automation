@@ -32,6 +32,9 @@ class RPI(rpi_pb2_grpc.RPIServicer):
         instructions = interval + "," + command
 
         return rpi_pb2.Reply(res=instructions)
+
+
+        
 #basic step to run the server
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

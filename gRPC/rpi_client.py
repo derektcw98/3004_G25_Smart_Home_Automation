@@ -19,13 +19,20 @@ from concurrent.futures import thread
 import logging
 from time import sleep
 from urllib import request
+import os
 
 import grpc
 import rpi_pb2
 import rpi_pb2_grpc
 from sense_hat import SenseHat
 
-interval_duration = 1
+config_file = os.getcwd() + "\gRPC\client_config.txt"
+f = open(config_file, "r")
+configs = f.readlines()
+print("CONFIGURATIONS:\n", configs)
+
+interval_duration = configs[0].replace('\n', '').split('=')
+room = configs[1].replace('\n', '').split('=')
 
 def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
@@ -35,7 +42,6 @@ def run():
         stub = rpi_pb2_grpc.RPIStub(channel)
         sense = SenseHat()
 
-        room = input("Enter a room name")
         while True:
             temp = sense.get_temperature()
             temp_calibrated = temp - ((cpu_temp - temp)/5.466)
@@ -46,7 +52,7 @@ def run():
             #set interval duration
             print(str(response.res))
             #sleep between sending of data
-            sleep(60 * interval_duration)
+            sleep(interval_duration)
 
 
 if __name__ == '__main__':
