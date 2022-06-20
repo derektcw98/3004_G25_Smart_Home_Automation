@@ -15,6 +15,7 @@
 
 from concurrent import futures
 import logging
+import sys
 
 import grpc
 import rpi_pb2
@@ -36,6 +37,11 @@ class RPI(rpi_pb2_grpc.RPIServicer):
 
     def processRoomData(self, request, context):
         #process data
+
+        room_name = request.roomName
+        print(room_name)
+        room_data = request.data
+        print(room_data)
 
         interval = ""
         command = ""

@@ -70,11 +70,16 @@ def run():
             interval_duration = configs[0].replace('\n', '').split('=')
             room = configs[1].replace('\n', '').split('=')
 
+            # Load data from JSON log and submit to server
             data = loadJson()
             response = stub.processRoomData(rpi_pb2.Request(room, data))
 
-            # (PLACEHOLDER FOR INSTRUCTIONS FROM SERVER)
+            # Server Instructions
             print(str(response.res))
+
+            # 
+            # TODO: PROCEED TO ACT/CARRY OUT INSTRUCTIONS HERE
+            # 
 
             # Sleep duration between sending of data
             sleep(interval_duration)
