@@ -20,6 +20,18 @@ import grpc
 import rpi_pb2
 import rpi_pb2_grpc
 
+# Dynamic ip address and port
+ipaddr = "localhost"
+port = "50051"
+
+try:
+    ipaddr = sys.argv[0]
+    port = sys.argv[1]
+except:
+    print("No arguments detected, using default: 'localhost:50051'")
+
+channel_to_use = ipaddr+":"+port
+
 class RPI(rpi_pb2_grpc.RPIServicer):
 
     def processRoomData(self, request, context):
@@ -28,7 +40,7 @@ class RPI(rpi_pb2_grpc.RPIServicer):
         interval = ""
         command = ""
 
-        #set instructions to return to client
+        # set instructions to return to client
         instructions = interval + "," + command
 
         return rpi_pb2.Reply(res=instructions)
@@ -40,7 +52,7 @@ class RPI(rpi_pb2_grpc.RPIServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     rpi_pb2_grpc.add_RPIServicer_to_server(RPI(),server)
-    server.add_insecure_port('[::]:50051')
+    server.add_insecure_port(channel_to_use)
     server.start()
     server.wait_for_termination()
 

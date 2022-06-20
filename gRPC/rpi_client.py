@@ -20,10 +20,23 @@ import logging
 from time import sleep
 from urllib import request
 import os
+import sys
 
 import grpc
 import rpi_pb2
 import rpi_pb2_grpc
+
+# Dynamic ip address and port
+ipaddr = "localhost"
+port = "50051"
+
+try:
+    ipaddr = sys.argv[0]
+    port = sys.argv[1]
+except:
+    print("No arguments detected, using default: 'localhost:50051'")
+
+channel_to_use = ipaddr+":"+port
 
 # Initiation of cached items
 client_log_json = {}
@@ -41,7 +54,7 @@ def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
     # used in circumstances in which the with sstatement does not fit the needs
     # of the code.
-    with grpc.insecure_channel('localhost:50051') as channel:
+    with grpc.insecure_channel(channel_to_use) as channel:
         stub = rpi_pb2_grpc.RPIStub(channel)
 
         while True:
