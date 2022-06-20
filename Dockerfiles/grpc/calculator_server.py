@@ -43,7 +43,7 @@ def serve():
     # TODO: add Calculator Servicier to the server
     calculator_pb2_grpc.add_CalculatorServicer_to_server(Calculator(), server)
 
-    server.add_insecure_port('[::]:50051')
+    server.add_insecure_port('172.17.0.2:50051')
     server.start()
     server.wait_for_termination()
 
