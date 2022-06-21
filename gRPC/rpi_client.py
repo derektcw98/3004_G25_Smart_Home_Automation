@@ -82,6 +82,7 @@ def run():
                     data = json.load(file)
                     print("data: \n", data)
                 except:
+                    data = {}
                     print("Empty Json File.")
                 file.close()
 
