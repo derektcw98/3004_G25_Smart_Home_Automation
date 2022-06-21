@@ -22,6 +22,7 @@ from urllib import request
 import os
 import sys
 import json
+from pathlib import Path
 
 import grpc
 import rpi_pb2
@@ -61,7 +62,7 @@ def run():
         while True:
             
             # Reading of Configurations File
-            config_file = os.getcwd() + "\client_config.txt"
+            config_file = Path('client_config.txt')
             f = open(config_file, "r")
             configs = f.readlines()
             f.close()
@@ -74,7 +75,7 @@ def run():
             room = str(room[1])
 
             # Load data from JSON log and submit to server
-            events_log_path = os.getcwd() + "\events_log.json"
+            events_log_path = Path('events_log.json')
             with open(events_log_path, "r+") as file:
             # try loading contents as a json dictionary
                 try:
