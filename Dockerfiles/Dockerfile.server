@@ -7,8 +7,8 @@ RUN python3 -m ensurepip
 COPY ./requirements.txt /requirements.txt
 RUN pip3 install -r /requirements.txt
 
-COPY ./grpc/calculator_server.py /grpc/calculator_server.py
-COPY ./grpc/calculator_pb2_grpc.py /grpc/calculator_pb2_grpc.py
-COPY ./grpc/calculator_pb2.py /grpc/calculator_pb2.py
+COPY ../gRPC/rpi_server.py /grpc/rpi_server.py
+COPY ../gRPC/rpi_pb2_grpc.py /grpc/rpi_pb2_grpc.py
+COPY ../gRPC/rpi_pb2.py /grpc/rpi_pb2.py
 
 EXPOSE 50051
