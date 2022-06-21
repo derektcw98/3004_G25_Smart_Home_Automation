@@ -77,6 +77,8 @@ def run():
 
             # Load data from JSON log and submit to server
             events_log_path = Path('events_log.json')
+            # Creates file if it doesn't exists
+            events_log_path.touch(exist_ok=True)
             with open(events_log_path, "r+") as file:
             # try loading contents as a json dictionary
                 try:
