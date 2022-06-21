@@ -63,6 +63,7 @@ def run():
             
             # Reading of Configurations File
             config_file = Path('client_config.txt')
+
             f = open(config_file, "r")
             configs = f.readlines()
             f.close()
