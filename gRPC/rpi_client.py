@@ -41,15 +41,15 @@ channel_to_use = ipaddr+":"+port
 print(channel_to_use)
 
 # Initiation of cached items
-client_log_json = {}
+events_log_json = {}
 
 def loadJson(path):
-    global client_log_json
+    global events_log_json
     # open file for reading, "r" 
     
     with open(path, "r") as file:
         # load json object into dictionary
-        client_log_json = json.load(file)
+        events_log_json = json.load(file)
 
 def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
@@ -74,8 +74,8 @@ def run():
             room = str(room[1])
 
             # Load data from JSON log and submit to server
-            client_log_path = os.getcwd() + "\client_log.json"
-            with open(client_log_path, "r+") as file:
+            events_log_path = os.getcwd() + "\events_log.json"
+            with open(events_log_path, "r+") as file:
             # try loading contents as a json dictionary
                 try:
                     data = json.load(file)

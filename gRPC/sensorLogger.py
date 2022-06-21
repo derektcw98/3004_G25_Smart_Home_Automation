@@ -26,10 +26,10 @@ def addEvent(date, device, state, temp, humidity):
   if device == "light": 
     device_state = "Light_State"
   #creates file if it doesn't exists
-  file = Path('events.json')
+  file = Path('events_log.json')
   file.touch(exist_ok=True)
   # Open json file
-  with open('events.json', "r+") as file:
+  with open('events_log.json', "r+") as file:
 
       # try loading contents as a json dictionary
       try:
@@ -43,7 +43,7 @@ def addEvent(date, device, state, temp, humidity):
                   events[date] = {device_state : state , "Room_Temperature" : temp, "Room_Humidity" : humidity}
                   print("post json: \n", events)
                   
-                  json.dump(events, open('events.json', "w"), indent=2, separators=(',', ': '))
+                  json.dump(events, open('events_log.json', "w"), indent=2, separators=(',', ': '))
 
           # something somewhere fucked up
           except:
@@ -54,7 +54,7 @@ def addEvent(date, device, state, temp, humidity):
           print("Empty Json File.")
           events = {}
           events[date] = {device_state : state , "Room_Temperature" : temp, "Room_Humidity" : humidity}
-          json.dump(events, open('events.json', "w"), indent=2, separators=(',', ': '))
+          json.dump(events, open('events_log.json', "w"), indent=2, separators=(',', ': '))
       
       # close the file
       file.close()
