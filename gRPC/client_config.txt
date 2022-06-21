@@ -1,2 +1,2 @@
-room=bedroom_master
-interval_time(seconds)=60
+room=master
+interval_time(seconds)=5

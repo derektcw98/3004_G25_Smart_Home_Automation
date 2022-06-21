@@ -104,4 +104,15 @@ def run():
 
 if __name__ == '__main__':
     logging.basicConfig()
+
+    room_name = input("Enter Room Name: ")
+    interval = input("Enter Interval(Seconds): ")
+    
+    client_config = Path('client_config.txt')
+    client_config.touch(exist_ok=True)
+
+    with open(client_config, 'w') as f:
+        f.write("room="+room_name+"\ninterval_time(seconds)="+interval)  
+    f.close()
+
     run()
