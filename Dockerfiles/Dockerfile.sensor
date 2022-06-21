@@ -6,4 +6,4 @@ RUN python3 -m ensurepip
 
 RUN pip3 install sense-hat
 
-COPY ../sensorLogger.py /grpc/sensorLogger.py
+COPY ../gRPC/sensorLogger.py /grpc/sensorLogger.py
