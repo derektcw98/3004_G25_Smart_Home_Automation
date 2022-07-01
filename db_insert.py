@@ -43,6 +43,12 @@ if __name__ == '__main__':
     data = pd.read_csv('data.csv')
     columns = ["day", "hour", "minute", "temperature", "humidity", "light_state", "aircon_state", "aircon_temp", "room", "class"]
     data.columns = columns
-    db.execute("create table if not exists sensors (sensor_id int primary key NOT NULL, day int NOT NULL, hour int NOT NULL, minute int NOT NULL,   temperature double NOT NULL, humidity double NOT NULL, light_state bit(1) NOT NULL, aircon_state bit(1) NOT NULL, aircon_temp int NOT NULL, room varchar(9) NOT NULL, class char(4) NOT NULL)")
-    
-
+    db.execute("create table if not exists sensors (sensor_id int primary key NOT NULL, day int NOT NULL, hour int NOT NULL, minute int NOT NULL, temperature double NOT NULL, humidity double NOT NULL, light_state tinyint(1) NOT NULL, aircon_state tinyint(1) NOT NULL, aircon_temp int NOT NULL, room varchar(9) NOT NULL, class char(4) NOT NULL)")
+    index=0
+    for record in range(len(data)):
+        insert="insert into sensors values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        tuple = data.values[record]
+        
+        db.cursor.execute(insert, (index,tuple[0],tuple[1],tuple[2],tuple[3],tuple[4],tuple[5],tuple[6],tuple[7],tuple[8],tuple[9]))
+        db.cnx.commit()
+        index=index+1
