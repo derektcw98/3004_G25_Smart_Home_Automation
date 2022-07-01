@@ -4,7 +4,7 @@ import pandas
 
 #generate data based on common usual behaviours
 
-#day of week, time, temperature, humidity, light on/off, aircon on/off, aircon temp, room, class
+#day of week, hour, min, temperature, humidity, light on/off, aircon on/off, aircon temp, room, class
 
 def timeProp(start,l):
    current = start
@@ -73,6 +73,6 @@ with open('data.csv', 'w') as f:
                     label = "wedh"
                 elif air_con == 1 and light == 1 and day >= 5:
                     label = "wenh"
-                print(day, "\t" + str(x.strftime("%H:%M")), "\t" + str(temp), "\t" + str(humidity), "\t" + str(light), "\t" + str(air_con), "\t" + str(aircon_temp), "\ttestRoom", "\t"+label)
-                data = str(day)+ "," + str(x.strftime("%H:%M")) + "," + str(temp) + "," + str(humidity) + "," + str(light) + "," + str(air_con) + "," + str(aircon_temp) +","+"testRoom" +","+ label + "\n"
+                print(day, "\t" + str(x.strftime("%H")),"\t" + str(x.strftime("%M")), "\t" + str(temp), "\t" + str(humidity), "\t" + str(light), "\t" + str(air_con), "\t" + str(aircon_temp), "\ttestRoom", "\t"+label)
+                data = str(day)+ "," + str(x.strftime("%H")) +"," + str(x.strftime("%M"))+ "," + str(temp) + "," + str(humidity) + "," + str(light) + "," + str(air_con) + "," + str(aircon_temp) +","+"testRoom" +","+ label + "\n"
                 f.write(data)
