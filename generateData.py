@@ -17,7 +17,7 @@ def timeProp(start,l):
 startDate = datetime.datetime(2022, 6, 27,0,00)
 timeDate = datetime.datetime(2022, 6, 26,23,50)
 with open('data.csv', 'w') as f:
-    for monthDay in range(0,4):
+    for monthDay in range(0,32):
         for day in range(0,7):
             day = startDate + datetime.timedelta(days= day)
             day  = day.weekday()
