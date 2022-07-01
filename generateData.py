@@ -56,6 +56,23 @@ with open('data.csv', 'w') as f:
                     else:
                         light = 0
                 aircon_temp = random.randint(23,29)
-                print(day, "\t" + str(x.strftime("%H:%M")), "\t" + str(temp), "\t" + str(humidity), "\t" + str(light), "\t" + str(air_con), "\t" + str(aircon_temp), "\ttestRoom")
-                data = str(day)+ "," + str(x.strftime("%H:%M")) + "," + str(temp) + "," + str(humidity) + "," + str(light) + "," + str(air_con) + "," + str(aircon_temp) +","+"testRoom\n"
+                #class generation
+                if air_con == 0 and light == 0 and day < 5:
+                    label = "wddc"
+                elif air_con == 0 and light == 1 and day < 5:
+                    label = "wdnc"
+                elif air_con == 1 and light == 0 and day < 5: 
+                    label = "wddh"
+                elif air_con == 1 and light == 1 and day < 5:
+                    label = "wdnh"
+                elif air_con == 0 and light == 0 and day >= 5:
+                    label = "wedc"
+                elif air_con == 0 and light == 1 and day >= 5:
+                    label = "wenc"
+                elif air_con == 1 and light == 0 and day >= 5: 
+                    label = "wedh"
+                elif air_con == 1 and light == 1 and day >= 5:
+                    label = "wenh"
+                print(day, "\t" + str(x.strftime("%H:%M")), "\t" + str(temp), "\t" + str(humidity), "\t" + str(light), "\t" + str(air_con), "\t" + str(aircon_temp), "\ttestRoom", "\t"+label)
+                data = str(day)+ "," + str(x.strftime("%H:%M")) + "," + str(temp) + "," + str(humidity) + "," + str(light) + "," + str(air_con) + "," + str(aircon_temp) +","+"testRoom" +","+ label + "\n"
                 f.write(data)
