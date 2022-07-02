@@ -22,7 +22,7 @@ startDate = datetime.datetime(2022, 7, 2, 0,00)
 timeDate = datetime.datetime(2022, 7, 1, 23,50)
 
 with open('data.csv', 'w') as f:
-    for monthDay in range(0,8):
+    for monthDay in range(0,32):
         for day in range(0,7):
             day = startDate + datetime.timedelta(days= day)
             day  = day.weekday()
