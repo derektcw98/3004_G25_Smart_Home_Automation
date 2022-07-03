@@ -21,8 +21,8 @@ def timeProp(start,l):
 startDate = datetime.datetime(2022, 7, 2, 0,00)
 timeDate = datetime.datetime(2022, 7, 1, 23,50)
 
-with open('data.csv', 'w') as f:
-    for monthDay in range(0,32):
+with open('dataTest.csv', 'w') as f:
+    for monthDay in range(0,4):
         for day in range(0,7):
             day = startDate + datetime.timedelta(days= day)
             day  = day.weekday()
@@ -75,23 +75,32 @@ with open('data.csv', 'w') as f:
                 # set random aircon temperature
                 aircon_temp = randfloat(23, 29, 0.5)
 
-                #class generation
-                if air_con == 0 and light == 0 and day < 5:
-                    label = "wddc"
-                elif air_con == 0 and light == 1 and day < 5:
-                    label = "wdnc"
-                elif air_con == 1 and light == 0 and day < 5: 
-                    label = "wddh"
-                elif air_con == 1 and light == 1 and day < 5:
-                    label = "wdnh"
-                elif air_con == 0 and light == 0 and day >= 5:
-                    label = "wedc"
-                elif air_con == 0 and light == 1 and day >= 5:
-                    label = "wenc"
-                elif air_con == 1 and light == 0 and day >= 5: 
-                    label = "wedh"
-                elif air_con == 1 and light == 1 and day >= 5:
-                    label = "wenh"
+                # #class generation
+                # if air_con == 0 and light == 0 and day < 5:
+                #     label = "wddc"
+                # elif air_con == 0 and light == 1 and day < 5:
+                #     label = "wdnc"
+                # elif air_con == 1 and light == 0 and day < 5: 
+                #     label = "wddh"
+                # elif air_con == 1 and light == 1 and day < 5:
+                #     label = "wdnh"
+                # elif air_con == 0 and light == 0 and day >= 5:
+                #     label = "wedc"
+                # elif air_con == 0 and light == 1 and day >= 5:
+                #     label = "wenc"
+                # elif air_con == 1 and light == 0 and day >= 5: 
+                #     label = "wedh"
+                # elif air_con == 1 and light == 1 and day >= 5:
+                #     label = "wenh"
+                #class generation (suppose to use data to produce result whether to turn on or off light/air_con)
+                if air_con == 0 and light == 0:
+                    label = "nanl"
+                elif air_con == 0 and light == 1:
+                    label = "nagl"
+                elif air_con == 1 and light == 0: 
+                    label = "ganl"
+                elif air_con == 1 and light == 1:
+                    label = "gagl"
 
                 print(day, "\t" + str(x.strftime("%H")),"\t" + str(x.strftime("%M")), "\t" + str(temp), "\t" + str(humidity), "\t" + str(light), "\t" + str(air_con), "\t" + str(aircon_temp), "\ttestRoom", "\t"+label)
                 data = str(day)+ "," + str(x.strftime("%H")) +"," + str(x.strftime("%M"))+ "," + str(temp) + "," + str(humidity) + "," + str(light) + "," + str(air_con) + "," + str(aircon_temp) +","+"testRoom" +","+ label + "\n"
