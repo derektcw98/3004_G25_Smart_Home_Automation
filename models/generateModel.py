@@ -6,6 +6,11 @@ from joblib import dump
 from datetime import datetime
 from time import sleep
 
+#Query data for noclass.csv
+def getDataFromDatabase():
+    df = 0 #add query to database
+    df.to_csv("noclass.csv", index = False, header=False)
+
 def generateModel():
     #Read data from CSV generated from databbase here
     df = pd.read_csv('noclass.csv')
