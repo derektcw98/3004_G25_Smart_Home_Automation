@@ -41,12 +41,10 @@ y = df['class']
 
 #Reduce features
 X = df.drop('class', axis =1)
-# X = X.drop('minute', axis = 1)
 X = X.drop('light_state', axis = 1)
 X = X.drop('aircon_state', axis = 1)
 X = X.drop('aircon_temp', axis = 1)
 X = X.drop('room', axis = 1)
-X = X.drop('humidity', axis = 1)
 
 #Split into test and training set
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=100)
@@ -59,9 +57,10 @@ Y_predTrain = knn.predict(X_train)
 Y_predTest = knn.predict(X_test)
 targetAccuracy = accuracy_score(y_train, Y_predTrain)
 accuracy = accuracy_score(y_test, Y_predTest)
-print("Target Accuracy: " + str(targetAccuracy),"Accuracy: " + str(accuracy))
+print("Target Accuracy: " + str(round(targetAccuracy,4)),"Accuracy: " + str(round(accuracy,4)))
+
 #if accuracy less than 98% of training accuracyy, add neighbours
-while accuracy <= (0.99* targetAccuracy): #adjust multiplier accordingly
+while accuracy <= (0.98* targetAccuracy): #adjust multiplier accordingly
     n += 2
     classifier = KNeighborsClassifier(n_neighbors=n)
     classifier.fit(X_train, y_train)
@@ -69,18 +68,20 @@ while accuracy <= (0.99* targetAccuracy): #adjust multiplier accordingly
     Y_predTest = classifier.predict(X_test)
     accuracy = accuracy_score(y_test, Y_predTest)
     print("Number of neighbours: " + str(n))
-    print("Target Accuracy: " + str(targetAccuracy),"Accuracy: " + str(accuracy))
+    print("Target Accuracy: " + str(round(targetAccuracy,4)),"Accuracy: " + str(round(accuracy,4)), "Percent: " + str(round((accuracy/targetAccuracy),4)))
 else:
     print("Target Accuracy Reached")
 
 #Create model to export
 knnPickle = open('knnPrediction', 'wb') 
 
+classifier = KNeighborsClassifier(n_neighbors=n)
+classifier.fit(X_train, y_train)
+
 # source, destination 
 pickle.dump(classifier, knnPickle)  
 knnPickle.close()
 print("Model Saved")
-
 # #To predict on edge device
 # # load the model from disk
 # loaded_model = pickle.load(open('knnPrediction', 'rb'))
