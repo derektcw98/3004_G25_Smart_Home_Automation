@@ -1,0 +1,9 @@
+version: '2.1'
+
+services:
+  generateModel:
+    image: eazi98/generatemodel:latest
+    container_name: generateModel
+    volumes:
+      - D:\Git Repos\3004_G25_Smart_Home_Automation\models:/home/jovyan
+    
