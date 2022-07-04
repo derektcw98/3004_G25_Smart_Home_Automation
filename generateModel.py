@@ -41,7 +41,7 @@ y = df['class']
 
 #Reduce features
 X = df.drop('class', axis =1)
-X = X.drop('minute', axis = 1)
+# X = X.drop('minute', axis = 1)
 X = X.drop('light_state', axis = 1)
 X = X.drop('aircon_state', axis = 1)
 X = X.drop('aircon_temp', axis = 1)
@@ -49,47 +49,35 @@ X = X.drop('room', axis = 1)
 X = X.drop('humidity', axis = 1)
 
 #Split into test and training set
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
-
-#Generate accuracy score
-testNeighbors = [1,3,5,7,9,11,13,15,17,19,21,31,41,51,61,71,81,91,101,201,265]
-trainAcc = []
-testAcc = []
-
-# Calculating error for K values between 1 and 265
-for i in testNeighbors:
-    knn = KNeighborsClassifier(n_neighbors=i)
-    knn.fit(X_train, y_train)
-    Y_predTrain = knn.predict(X_train)
-    Y_predTest = knn.predict(X_test)
-    trainAcc.append(accuracy_score(y_train, Y_predTrain))
-    testAcc.append(accuracy_score(y_test, Y_predTest))
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=100)
 
 # Generate model for exporting
 n = 5
-classifier = KNeighborsClassifier(n_neighbors=n)
-classifier.fit(X_train, y_train)
+knn = KNeighborsClassifier(n_neighbors=n)
+knn.fit(X_train, y_train)
 Y_predTrain = knn.predict(X_train)
 Y_predTest = knn.predict(X_test)
 targetAccuracy = accuracy_score(y_train, Y_predTrain)
 accuracy = accuracy_score(y_test, Y_predTest)
-
+print("Target Accuracy: " + str(targetAccuracy),"Accuracy: " + str(accuracy))
 #if accuracy less than 98% of training accuracyy, add neighbours
-if accuracy <= (0.98* targetAccuracy):
+while accuracy <= (0.99* targetAccuracy): #adjust multiplier accordingly
     n += 2
     classifier = KNeighborsClassifier(n_neighbors=n)
     classifier.fit(X_train, y_train)
-    Y_predTrain = knn.predict(X_train)
-    Y_predTest = knn.predict(X_test)
-    accuracy = knn.predict(X_test)
+    Y_predTrain = classifier.predict(X_train)
+    Y_predTest = classifier.predict(X_test)
+    accuracy = accuracy_score(y_test, Y_predTest)
+    print("Number of neighbours: " + str(n))
+    print("Target Accuracy: " + str(targetAccuracy),"Accuracy: " + str(accuracy))
 else:
-    print(n)
+    print("Target Accuracy Reached")
 
 #Create model to export
 knnPickle = open('knnPrediction', 'wb') 
 
 # source, destination 
-pickle.dump(knn, knnPickle)  
+pickle.dump(classifier, knnPickle)  
 knnPickle.close()
 print("Model Saved")
 
