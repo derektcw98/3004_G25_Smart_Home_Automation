@@ -1,17 +1,95 @@
 from time import sleep
-from sense_hat import SenseHat
+# from sense_hat import SenseHat
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from pathlib import Path
+import threading
+import random
+import pandas
 
-sense = SenseHat()
-fan = False
-Fan_State = ""
-light = False
-Light_State = ""
+# sense = SenseHat()
 
 events = {}
+
+interval_secs = 1*60/60
+
+# Entry Inits
+now = datetime.now()
+dayOfWeek = 0
+dayHour = 0
+dayMin = 0
+temperature = 0
+humidity = 0
+AC = False
+AC_State = random.randint(0,1)
+Light = False
+Light_State = random.randint(0,1)
+AC_Temp = 0
+room = "X_Room"
+label = ""
+
+# Saving of sensor data function
+def saveSensorData():
+  global dayOfWeek,dayHour,dayMin,temperature,humidity,AC_State,Light_State,AC_Temp,room,label
+  # Save if 10 minute mark
+  curr_min = int(datetime.now().strftime("%S")[1:])
+  if curr_min==0:
+
+    #creates file if it doesn't exists
+    now = datetime.now()
+    dayOfWeek = int(now.weekday())
+    now_dmy = now.strftime("%d%m%Y")
+    file_path = room + "_" + str(now_dmy) + ".csv"
+    
+    if dayOfWeek == 0 and not Path(file_path).exists:
+      file = Path(file_path)
+      file.touch(exist_ok=True)
+    
+    # for days besides monday, assign file_path to monday's date
+    if dayOfWeek!=0:
+      startOfWeek_dmy = (datetime.now() - timedelta(days=dayOfWeek)).strftime("%d%m%Y")
+      file_path = room + "_" + str(startOfWeek_dmy) + ".csv"
+      
+    # get variables to save
+    dayHour = int(datetime.now().strftime("%H"))
+    dayMin = int(datetime.now().strftime("%H"))
+    # sensehat_temp = sense.get_temperature()
+    # temperature = str(round((temp - ((get_cpu_temp() - temp)/2.466)), 2))
+    # humidity = str(round(sense.get_humidity(),2))
+    temperature = randfloat(28, 37, 0.5)
+    humidity = randfloat(55, 95, 0.5)
+    if AC_State == 0 and Light_State == 0:
+        label = "nanl"
+    elif AC_State == 0 and Light_State == 1:
+        label = "nagl"
+    elif AC_State == 1 and Light_State == 0: 
+        label = "ganl"
+    elif AC_State == 1 and Light_State == 1:
+        label = "gagl"
+
+    # form new entry
+    entry = ""
+    entry += str(dayOfWeek) + ","
+    entry += str(dayHour) + ","
+    entry += str(dayMin) + ","
+    entry += str(temperature) + ","
+    entry += str(humidity) + ","
+    entry += str(AC_State) + ","
+    entry += str(Light_State) + ","
+    entry += str(AC_Temp) + ","
+    entry += str(room) + ","
+    entry += str(label) + "\n"
+
+    with open(file_path, "a") as file:
+      print("current time: ", datetime.now().strftime("%H:%M:%S"))
+      print("writing: ", entry)
+      file.write(entry)
+      
+
+def startSensorLogger():
+  threading.Timer(interval_secs, startSensorLogger).start()
+  saveSensorData()
 
 
 def get_cpu_temp():
@@ -19,84 +97,39 @@ def get_cpu_temp():
   t = float(res.replace("temp=","").replace("'C\n",""))
   return(t)
 
-def addEvent(date, device, state, temp, humidity):
-  global events
-  if device == "fan": 
-    device_state = "Fan_State"
-  if device == "light": 
-    device_state = "Light_State"
-  #creates file if it doesn't exists
-  file = Path('events_log.json')
-  file.touch(exist_ok=True)
-  # Open json file
-  with open('events_log.json', "r+") as file:
+# for step based float random generation
+def randfloat(start, stop, step):
+    return random.randint(0, int((stop - start) / step)) * step + start
 
-      # try loading contents as a json dictionary
-      try:
-          events = json.load(file)
-          print("initial json: \n", events)
+startSensorLogger()
 
-          # if date variable is not currently inside the keys of the dictionary
-          # add new key-value pair and overwrite the json file (additional 2 params are to beautify the json file)
-          try:
-              if date not in events.keys():
-                  events[date] = {device_state : state , "Room_Temperature" : temp, "Room_Humidity" : humidity}
-                  print("post json: \n", events)
-                  
-                  json.dump(events, open('events_log.json', "w"), indent=2, separators=(',', ': '))
+# sense.clear()
+# while True:
+  
+#   sleep(1)
+#   for event in sense.stick.get_events(): #on joystick press do action
 
-          # something somewhere fucked up
-          except:
-              print("Something Wrong.")
+#     # Air-Conditioner TOGGLE
+#     if event.direction == "up" and event.action == "pressed":
+#       AC = not AC
+#       if AC == True:
+#         AC_State = 1
+#       else:
+#         AC_State = 0  
 
-      # exception occured, likely empty json
-      except:
-          print("Empty Json File.")
-          events = {}
-          events[date] = {device_state : state , "Room_Temperature" : temp, "Room_Humidity" : humidity}
-          json.dump(events, open('events_log.json', "w"), indent=2, separators=(',', ': '))
-      
-      # close the file
-      file.close()
-
-sense.clear()
-while True:
-  sleep(1)
-  now = datetime.now()
-  formatted_now = now.strftime("%Y/%m/%d-%H:%M:%S")
-  # Temperature Data
-  temp = sense.get_temperature()
-  temp_calibrated = str(round((temp - ((get_cpu_temp() - temp)/2.466)), 2))
-  # Humidity Data
-  humidity = str(round(sense.get_humidity(),2))
-
-  for event in sense.stick.get_events(): #on joystick press do action
-    if event.direction == "up" and event.action == "pressed":
-      fan = not fan
-      if fan == True:
-        Fan_State = "On"
-      else:
-        Fan_State = "Off"
-      addEvent(formatted_now, "fan", Fan_State, temp_calibrated, humidity)  
-
-    if event.direction == "down" and event.action == "pressed":
-      fan = not fan
-      if fan == True:
-        Fan_State = "On"
-      else:
-        Fan_State = "Off"
-      addEvent(formatted_now, "fan", Fan_State, temp_calibrated, humidity) 
-
-    if event.direction == "middle" and event.action == "pressed":
-      light = not light
-      if light == True:
-        Light_State = "On"
-      else:
-        Light_State = "Off"
-      addEvent(formatted_now, "light", Light_State, temp_calibrated, humidity) 
+#     # Light TOGGLE
+#     if event.direction == "down" and event.action == "pressed":
+#       Light = not Light
+#       if Light == True:
+#         Light_State = 1
+#       else:
+#         Light_State = 0
     
-    #print(event.direction, event.action)
-    if event.action == "released":
-      print("Light State: " + Light_State)
-      print("Fan State: " + Fan_State)
+#     # display user action
+#     print(event.direction, event.action)
+
+    # # on release, show all states
+    # if event.action == "released":
+    #   print("AC State: " + AC_State)
+    #   print("Light State: " + Light_State)
 
