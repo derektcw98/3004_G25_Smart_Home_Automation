@@ -111,9 +111,12 @@ if not states_file.exists():
 
 sense.clear()
 while True:
+  print("new iteration")
   with open(states_path, "r") as file:
-    AC_State = file.readline().split("=")[1]
-    Light_State = file.readline().split("=")[1]
+    AC_State = int(file.readline().split("=")[1])
+    Light_State = int(file.readline().split("=")[1])
+    print("AC_State: ", AC_State)
+    print("Light_State: ", Light_State)
 
   # display led 
   if Light_State == 1:
@@ -161,6 +164,7 @@ while True:
 
   AC_State_New = 5
   Light_State_New = 5
+
   for event in sense.stick.get_events(): #on joystick press do action
 
     # Air-Conditioner TOGGLE
@@ -180,10 +184,11 @@ while True:
         Light_State_New = 0
     
     # if any state changed, update state.txt
-    if AC_State_New != 5:
+    if int(AC_State_New) != 5:
       with open(states_path, "w") as file:
         file.write("AC_State=" + str(AC_State_New) + "\nLight_State=" + str(Light_State))
-    elif Light_State_New != 5:
+
+    elif int(Light_State_New) != 5:
       with open(states_path, "w") as file:
         file.write("AC_State=" + str(AC_State) + "\nLight_State=" + str(Light_State_New))
 
