@@ -6,36 +6,32 @@ from joblib import dump
 from datetime import datetime
 from time import sleep
 
-#Query data for noclass.csv
-def getDataFromDatabase():
-    df = 0 #add query to database
-    df.to_csv("noclass.csv", index = False, header=False)
-
 def generateModel():
     #Read data from CSV generated from databbase here
     df = pd.read_csv('noclass.csv')
 
-    labels = []
+    ## Class generation done on client instead ##
+    # labels = []
 
-    #Create class based on device states
-    for i in df.index:
-        lightState = int(df.iloc[i,5])
-        airconState = int(df.iloc[i,6])
-        if airconState == 0 and lightState == 0:
-            label = "nanl"
-        elif airconState == 0 and lightState == 1:
-            label = "nagl"
-        elif airconState == 1 and lightState == 0: 
-            label = "ganl"
-        elif airconState == 1 and lightState == 1:
-            label = "gagl"
-        labels.append(label)
+    # #Create class based on device states
+    # for i in df.index:
+    #     lightState = int(df.iloc[i,5])
+    #     airconState = int(df.iloc[i,6])
+    #     if airconState == 0 and lightState == 0:
+    #         label = "nanl"
+    #     elif airconState == 0 and lightState == 1:
+    #         label = "nagl"
+    #     elif airconState == 1 and lightState == 0: 
+    #         label = "ganl"
+    #     elif airconState == 1 and lightState == 1:
+    #         label = "gagl"
+    #     labels.append(label)
 
-    df.insert(9,"class", labels, True)
+    # df.insert(9,"class", labels, True)
 
-    #Add in column names
-    #day of week, time, temperature, humidity, light on/off, aircon on/off, aircon temp, room, class
-    df.columns = ["day", "hour", "minute", "temperature", "humidity", "light_state", "aircon_state", "aircon_temp", "room", "class"]
+    # Add in column names
+    # day of week, time, temperature, humidity, light on/off, aircon on/off, aircon temp, room, class
+    df.columns = ["day", "hour", "minute", "temperature", "humidity", "aircon_temp", "room", "class"]
 
 
     # tentatively reduced to 5 features for POC
@@ -43,8 +39,6 @@ def generateModel():
 
     #Reduce features
     X = df.drop('class', axis =1)
-    X = X.drop('light_state', axis = 1)
-    X = X.drop('aircon_state', axis = 1)
     X = X.drop('aircon_temp', axis = 1)
     X = X.drop('room', axis = 1)
 
@@ -94,8 +88,10 @@ while True:
     now = datetime.now()
     dayOfWeek = now.weekday()
     print(dayOfWeek)
-    if dayOfWeek == 6:
+    if dayOfWeek == 1:
+        #generate model
         print("generating model")
         generateModel()
+    #wait to check day
     print("Awaiting next day...")
     sleep(60*60*24)
