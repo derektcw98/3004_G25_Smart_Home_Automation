@@ -103,7 +103,11 @@ startSensorLogger()
 # read state file/create if doesn't exist yet
 states_path = str(room) + "_state.txt"
 states_file = Path(states_path)
-states_file.touch(exist_ok=True)
+
+if not states_file.exists():
+  states_file.touch(exist_ok=True)
+  with open(states_path, "w") as file:
+    file.write("AC_State=0\nLight_State=0")
 
 sense.clear()
 while True:
@@ -178,12 +182,10 @@ while True:
     # if any state changed, update state.txt
     if AC_State_New != 5:
       with open(states_path, "w") as file:
-        file.writelines("AC_State=" + str(AC_State_New))
-        file.writelines("Light_State=" + str(Light_State))
+        file.write("AC_State=" + str(AC_State_New) + "\nLight_State=" + str(Light_State))
     elif Light_State_New != 5:
       with open(states_path, "w") as file:
-        file.writelines("AC_State=" + str(AC_State))
-        file.writelines("Light_State=" + str(Light_State_New))
+        file.write("AC_State=" + str(AC_State) + "\nLight_State=" + str(Light_State_New))
 
     # display user action
     print(event.direction, event.action)
