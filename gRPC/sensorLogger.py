@@ -178,12 +178,12 @@ while True:
     # if any state changed, update state.txt
     if AC_State_New != 5:
       with open(states_path, "w") as file:
-        file.writelines("AC_State=" + AC_State_New + "\n")
-        file.writelines("Light_State=" + Light_State)
+        file.writelines("AC_State=" + str(AC_State_New) + "\n")
+        file.writelines("Light_State=" + str(Light_State))
     elif Light_State_New != 5:
       with open(states_path, "w") as file:
-        file.writelines("AC_State=" + AC_State + "\n")
-        file.writelines("Light_State=" + Light_State_New)
+        file.writelines("AC_State=" + str(AC_State) + "\n")
+        file.writelines("Light_State=" + str(Light_State_New))
 
     # display user action
     print(event.direction, event.action)
