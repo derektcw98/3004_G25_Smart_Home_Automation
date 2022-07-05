@@ -27,7 +27,7 @@ AC_Temp = 0
 if len(sys.argv)==2:
   room = sys.argv[1]
 else:
-  room = "Default_Room"
+  room = "defaultRoom"
 label = ""
 
 # Saving of sensor data function
