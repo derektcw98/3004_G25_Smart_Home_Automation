@@ -51,7 +51,13 @@ class RPI(rpi_pb2_grpc.RPIServicer):
         result = "Data has been successfully received by server"
         return rpi_pb2.Reply(res=result)
 
+    def askBehavior(self, request, context):
 
+        # TODO: call prediction model on server container with request.data and return to client
+
+        result = "nagl"
+
+        return rpi_pb2.Reply(res=result)
 
 
 #basic step to run the server

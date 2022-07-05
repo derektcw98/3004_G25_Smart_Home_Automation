@@ -19,7 +19,6 @@ import logging
 from time import sleep
 from urllib import request
 import sys
-import json
 from pathlib import Path
 
 import grpc
@@ -33,6 +32,7 @@ from threading import Thread
 ipaddr = "localhost"
 port = "50051"
 room = "default"
+
 try:
     ipaddr = sys.argv[1]
     port = sys.argv[2]
@@ -43,8 +43,7 @@ except:
 channel_to_use = ipaddr+":"+port
 print(channel_to_use)
 
-def sensorDataSend(stub,test):
-
+def sensorDataSend(stub, string):
     now = datetime.now()
     dayOfWeek = int(now.weekday())
     dayHour = int(datetime.now().strftime("%H"))
@@ -68,20 +67,46 @@ def run():
     with grpc.insecure_channel(channel_to_use) as channel:
         stub = rpi_pb2_grpc.RPIStub(channel)
 
-        sensorDataThread = Thread(target=sensorDataSend, args=(stub,"test"))
+        sensorDataThread = Thread(target=sensorDataSend, args=(stub,"start"))
         sensorDataThread.start()
         sensorDataThread.join()
+
         while True:
-            pass
-        
-            # response = stub.askBehavior(rpi_pb2.RequestBehavior(roomName = room, data = str(data)))
+            now = datetime.now()
+            dayOfWeek = int(now.weekday())
+            if dayOfWeek!=0:
+                startOfWeek_dmy = (now - timedelta(days=dayOfWeek)).strftime("%d%m%Y")
+                file_path = room + "_" + str(startOfWeek_dmy) + ".csv"
+                
+            # Every 10mins run the following (1min after csv updated)
+            curr_min = int(now.strftime("%M")[1:])            
+            if curr_min==1:
+                # for days besides monday, assign file_path to monday's date
+                with open(file_path, 'r') as f:
+                    lines = f.read().splitlines()
+                    latest_data = lines[-1]
+                    print("latest record: ", latest_data)
+                
+                response = stub.askBehavior(rpi_pb2.RequestBehavior(roomName = room, data = latest_data))
 
-            # # Behavior
-            # print(str(response.res))
+            # Behavior returned
+            returned_label = response.res
+            print(returned_label)
 
-            # 
-            # TODO: PROCEED TO ACT/CARRY OUT INSTRUCTIONS HERE
-            # 
+            # TODO: Change states on RPI
+            if returned_label != latest_data:
+                if returned_label[0] == 'g':
+                    AC_State = 1
+                elif returned_label[0] == 'n':
+                    AC_State = 0
+                elif returned_label[2] == 'g':
+                    Light_State = 1
+                elif returned_label[2] == 'n':
+                    Light_State = 0
+
+            # system sleep for a minute
+            sleep(1*60)
+            
 
 
 if __name__ == '__main__':
