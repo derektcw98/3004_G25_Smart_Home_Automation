@@ -74,9 +74,13 @@ def run():
         while True:
             now = datetime.now()
             dayOfWeek = int(now.weekday())
+
+            # get filepath of start of week records
             if dayOfWeek!=0:
                 startOfWeek_dmy = (now - timedelta(days=dayOfWeek)).strftime("%d%m%Y")
                 file_path = room + "_" + str(startOfWeek_dmy) + ".csv"
+            else: 
+                file_path = room + "_" + str(now.strftime("%d%m%Y")) + ".csv"
                 
             # Every 10mins run the following (1min after csv updated)
             curr_min = int(now.strftime("%M")[1:])            
@@ -99,13 +103,17 @@ def run():
                     AC_State = 1
                 elif returned_label[0] == 'n':
                     AC_State = 0
-                elif returned_label[2] == 'g':
+
+                if returned_label[2] == 'g':
                     Light_State = 1
                 elif returned_label[2] == 'n':
                     Light_State = 0
+            
+            # write to states file
 
             # system sleep for a minute
             sleep(1*60)
+        
             
 
 

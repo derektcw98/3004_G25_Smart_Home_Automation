@@ -100,58 +100,79 @@ def randfloat(start, stop, step):
 
 startSensorLogger()
 
+# read state file/create if doesn't exist yet
+states_path = str(room) + "_state.txt"
+states_file = Path(states_path)
+states_file.touch(exist_ok=True)
+
 sense.clear()
 while True:
+  with open(states_path, "r") as file:
+    AC_State = file.readline().split("=")[1]
+    Light_State = file.readline().split("=")[1]
+
+  # display led 
+  if AC_State == 1:
+    sense.set_pixel(0, 0, (255, 0, 0))
+    sense.set_pixel(0, 1, (255, 0, 0))
+    sense.set_pixel(0, 2, (255, 0, 0))
+    sense.set_pixel(1, 2, (255, 0, 0))
+  else:
+    sense.set_pixel(0, 0, (0, 255, 0))
+    sense.set_pixel(0, 1, (0, 255, 0))
+    sense.set_pixel(0, 2, (0, 255, 0))
+    sense.set_pixel(1, 2, (0, 255, 0))
+  if Light_State == 1:
+    sense.set_pixel(5, 7, (255, 0, 0))
+    sense.set_pixel(6, 7, (255, 0, 0))
+    sense.set_pixel(7, 7, (255, 0, 0))
+    sense.set_pixel(5, 5, (255, 0, 0))
+    sense.set_pixel(6, 5, (255, 0, 0))
+    sense.set_pixel(7, 5, (255, 0, 0))
+    sense.set_pixel(4, 6, (255, 0, 0))
+  else:
+    sense.set_pixel(5, 7, (0, 255, 0))
+    sense.set_pixel(6, 7, (0, 255, 0))
+    sense.set_pixel(7, 7, (0, 255, 0))
+    sense.set_pixel(5, 5, (0, 255, 0))
+    sense.set_pixel(6, 5, (0, 255, 0))
+    sense.set_pixel(7, 5, (0, 255, 0))
+    sense.set_pixel(4, 6, (0, 255, 0))
+
   sleep(1)
 
+  AC_State_New = 5
+  Light_State_New = 5
   for event in sense.stick.get_events(): #on joystick press do action
 
     # Air-Conditioner TOGGLE
     if event.direction == "up" and event.action == "pressed":
       AC = not AC
       if AC == True:
-        AC_State = 1
+        AC_State_New = 1
       else:
-        AC_State = 0  
+        AC_State_New = 0  
 
     # Light TOGGLE
     if event.direction == "down" and event.action == "pressed":
       Light = not Light
       if Light == True:
-        Light_State = 1
+        Light_State_New = 1
       else:
-        Light_State = 0
+        Light_State_New = 0
     
+    # if any state changed, update state.txt
+    if AC_State_New != 5:
+      with open(states_path, "w") as file:
+        file.writelines("AC_State=" + AC_State_New + "\n")
+        file.writelines("Light_State=" + Light_State)
+    elif Light_State_New != 5:
+      with open(states_path, "w") as file:
+        file.writelines("AC_State=" + AC_State + "\n")
+        file.writelines("Light_State=" + Light_State_New)
+
     # display user action
     print(event.direction, event.action)
-
-    # display led 
-    if AC_State == 1:
-      sense.set_pixel(0, 0, (255, 0, 0))
-      sense.set_pixel(0, 1, (255, 0, 0))
-      sense.set_pixel(0, 2, (255, 0, 0))
-      sense.set_pixel(1, 2, (255, 0, 0))
-    else:
-      sense.set_pixel(0, 0, (0, 255, 0))
-      sense.set_pixel(0, 1, (0, 255, 0))
-      sense.set_pixel(0, 2, (0, 255, 0))
-      sense.set_pixel(1, 2, (0, 255, 0))
-    if Light_State == 1:
-      sense.set_pixel(5, 7, (255, 0, 0))
-      sense.set_pixel(6, 7, (255, 0, 0))
-      sense.set_pixel(7, 7, (255, 0, 0))
-      sense.set_pixel(5, 5, (255, 0, 0))
-      sense.set_pixel(6, 5, (255, 0, 0))
-      sense.set_pixel(7, 5, (255, 0, 0))
-      sense.set_pixel(4, 6, (255, 0, 0))
-    else:
-      sense.set_pixel(5, 7, (0, 255, 0))
-      sense.set_pixel(6, 7, (0, 255, 0))
-      sense.set_pixel(7, 7, (0, 255, 0))
-      sense.set_pixel(5, 5, (0, 255, 0))
-      sense.set_pixel(6, 5, (0, 255, 0))
-      sense.set_pixel(7, 5, (0, 255, 0))
-      sense.set_pixel(4, 6, (0, 255, 0))
 
     # on release, show all states
     if event.action == "released":
