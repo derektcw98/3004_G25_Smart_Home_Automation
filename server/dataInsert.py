@@ -8,7 +8,7 @@ import sqlalchemy
 
 
 def engine(host, port, database, user, password):
-    engine = engine = sqlalchemy.create_engine(
+    engine = sqlalchemy.create_engine(
         f"mysql+mysqldb://{user}:{password}@{host}/{database}", pool_recycle=3600)
 
     if engine.connect():

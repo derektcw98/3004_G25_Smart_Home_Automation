@@ -8,7 +8,7 @@ import sqlalchemy
 
 
 def engine(host, port, database, user, password):
-    engine = engine = sqlalchemy.create_engine(
+    engine = sqlalchemy.create_engine(
         f"mysql+mysqldb://{user}:{password}@{host}/{database}", pool_recycle=3600)
 
     if engine.connect():
@@ -28,6 +28,7 @@ def retrieveMonthPandas(engine, room):
 
 
 if __name__ == '__main__':
+    #localhost should be replaced with env variable
     engine = engine('localhost', 3306, 'homedb', 'root', 'mypass')
     engine.execute("create table if not exists sensors (date DATE NOT NULL, day int NOT NULL, hour int NOT NULL, minute int NOT NULL, temperature double NOT NULL, humidity double NOT NULL, light_state tinyint(1) NOT NULL, aircon_state tinyint(1) NOT NULL, aircon_temp int NOT NULL, room varchar(9) NOT NULL, class char(4) NOT NULL)")
     retrieveMonthPandas(engine, input("Query room: "))
