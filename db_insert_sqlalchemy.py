@@ -2,16 +2,20 @@ import datetime
 import pandas as pd
 import sqlalchemy
 
+# pip install mysqlclient
 # access mariadb
 # mysql --host=192.168.1.16 --port=3306 -u root -p
 
 
-def engine():
+def engine(host, port, database, user, password):
     engine = engine = sqlalchemy.create_engine(
-        "mariadb+mariadbconnector://root:mariasama@192.168.1.16:3306/homedb", pool_recycle=3600)
-    print(engine)
-    return engine
+        f"mysql+mysqldb://{user}:{password}@{host}/{database}", pool_recycle=3600)
 
+    if engine.connect():
+        print("Connected")
+    else:
+        print("Failed to connect")    
+    return engine
 
 def insert(engine):
     # create table for sensor
@@ -22,14 +26,13 @@ def insert(engine):
         df = pd.read_csv('models/data.csv')
         df.columns = ["day", "hour", "minute", "temperature", "humidity",
                       "light_state", "aircon_state", "aircon_temp", "room", "class"]
-        now = datetime.datetime.now()
-        df['datetime'] = now
+        now = datetime.datetime.now().date()
+        df['date'] = now
         df.to_sql('sensors', conn, if_exists='append', index=False)
         print("Inserted")
 
     # my pc is getting 'mariadb.ProgrammingError: Cursor is closed', but it fine on my laptop/pi
     # issue could just be mariadb not being installed on my pc but doubt so cus i could still execute create table
-
 
 def queryRoom(engine, room):
     conn = engine.raw_connection()
@@ -45,7 +48,7 @@ def queryRoom(engine, room):
 def retrieveMonthPandas(engine, room):
     conn = engine.raw_connection()
     c = conn.cursor()
-    query = """SELECT day, hour, minute, temperature, humidity, light_state, aircon_state, aircon_temp, room, class from sensors where room = %(roomname)s AND date(datetime) between (curdate() - interval 1 month) and curdate() limit 15"""
+    query = """SELECT day, hour, minute, temperature, humidity, light_state, aircon_state, aircon_temp, room, class from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 1 month) and curdate() limit 15"""
 
     df = pd.read_sql_query(sql=query, con=engine, params={"roomname": room})
     df.to_csv('noclass.csv', index=False, header=None)
@@ -53,7 +56,8 @@ def retrieveMonthPandas(engine, room):
 
 
 if __name__ == '__main__':
-    engine = engine()
+    engine = engine('localhost', 3306, 'homedb', 'root', 'mariasama')
+    engine.execute("create table if not exists sensors (date DATE NOT NULL, day int NOT NULL, hour int NOT NULL, minute int NOT NULL, temperature double NOT NULL, humidity double NOT NULL, light_state tinyint(1) NOT NULL, aircon_state tinyint(1) NOT NULL, aircon_temp int NOT NULL, room varchar(9) NOT NULL, class char(4) NOT NULL)")
     insert(engine)
     retrieveMonthPandas(engine, input("Query room: "))
 
