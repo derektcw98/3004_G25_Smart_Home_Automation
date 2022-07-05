@@ -17,7 +17,7 @@
 // python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. rpi.proto ---//
 //--------------------------------------------------------------------------------------------------------//
 
-syntax = "proto3";
+syntax = "proto3"; 
 
 package rpi;
 
@@ -25,11 +25,17 @@ package rpi;
 service RPI {
   rpc askBehavior (RequestBehavior) returns (Reply) {}
   rpc sendSensorData (RequestSensorData) returns (Reply) {}
+  rpc saveModel (RequestModel) returns (Reply) {}
 }
 
 message RequestBehavior {
   string roomName = 1;
   string data = 2;
+}
+
+message RequestModel {
+  string roomName = 1;
+  string model = 2;
 }
 
 message RequestSensorData {

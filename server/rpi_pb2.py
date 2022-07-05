@@ -14,11 +14,12 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\trpi.proto\x12\x03rpi\"1\n\x0fRequestBehavior\x12\x10\n\x08roomName\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\"6\n\x11RequestSensorData\x12\x10\n\x08roomName\x18\x01 \x01(\t\x12\x0f\n\x07\x63svdata\x18\x02 \x01(\t\"\x14\n\x05Reply\x12\x0b\n\x03res\x18\x01 \x01(\t2p\n\x03RPI\x12\x31\n\x0b\x61skBehavior\x12\x14.rpi.RequestBehavior\x1a\n.rpi.Reply\"\x00\x12\x36\n\x0esendSensorData\x12\x16.rpi.RequestSensorData\x1a\n.rpi.Reply\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\trpi.proto\x12\x03rpi\"1\n\x0fRequestBehavior\x12\x10\n\x08roomName\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\"/\n\x0cRequestModel\x12\x10\n\x08roomName\x18\x01 \x01(\t\x12\r\n\x05model\x18\x02 \x01(\t\"6\n\x11RequestSensorData\x12\x10\n\x08roomName\x18\x01 \x01(\t\x12\x0f\n\x07\x63svdata\x18\x02 \x01(\t\"\x14\n\x05Reply\x12\x0b\n\x03res\x18\x01 \x01(\t2\x9e\x01\n\x03RPI\x12\x31\n\x0b\x61skBehavior\x12\x14.rpi.RequestBehavior\x1a\n.rpi.Reply\"\x00\x12\x36\n\x0esendSensorData\x12\x16.rpi.RequestSensorData\x1a\n.rpi.Reply\"\x00\x12,\n\tsaveModel\x12\x11.rpi.RequestModel\x1a\n.rpi.Reply\"\x00\x62\x06proto3')
 
 
 
 _REQUESTBEHAVIOR = DESCRIPTOR.message_types_by_name['RequestBehavior']
+_REQUESTMODEL = DESCRIPTOR.message_types_by_name['RequestModel']
 _REQUESTSENSORDATA = DESCRIPTOR.message_types_by_name['RequestSensorData']
 _REPLY = DESCRIPTOR.message_types_by_name['Reply']
 RequestBehavior = _reflection.GeneratedProtocolMessageType('RequestBehavior', (_message.Message,), {
@@ -27,6 +28,13 @@ RequestBehavior = _reflection.GeneratedProtocolMessageType('RequestBehavior', (_
   # @@protoc_insertion_point(class_scope:rpi.RequestBehavior)
   })
 _sym_db.RegisterMessage(RequestBehavior)
+
+RequestModel = _reflection.GeneratedProtocolMessageType('RequestModel', (_message.Message,), {
+  'DESCRIPTOR' : _REQUESTMODEL,
+  '__module__' : 'rpi_pb2'
+  # @@protoc_insertion_point(class_scope:rpi.RequestModel)
+  })
+_sym_db.RegisterMessage(RequestModel)
 
 RequestSensorData = _reflection.GeneratedProtocolMessageType('RequestSensorData', (_message.Message,), {
   'DESCRIPTOR' : _REQUESTSENSORDATA,
@@ -48,10 +56,12 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _REQUESTBEHAVIOR._serialized_start=18
   _REQUESTBEHAVIOR._serialized_end=67
-  _REQUESTSENSORDATA._serialized_start=69
-  _REQUESTSENSORDATA._serialized_end=123
-  _REPLY._serialized_start=125
-  _REPLY._serialized_end=145
-  _RPI._serialized_start=147
-  _RPI._serialized_end=259
+  _REQUESTMODEL._serialized_start=69
+  _REQUESTMODEL._serialized_end=116
+  _REQUESTSENSORDATA._serialized_start=118
+  _REQUESTSENSORDATA._serialized_end=172
+  _REPLY._serialized_start=174
+  _REPLY._serialized_end=194
+  _RPI._serialized_start=197
+  _RPI._serialized_end=355
 # @@protoc_insertion_point(module_scope)

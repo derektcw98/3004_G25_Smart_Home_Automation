@@ -25,6 +25,11 @@ class RPIStub(object):
                 request_serializer=rpi__pb2.RequestSensorData.SerializeToString,
                 response_deserializer=rpi__pb2.Reply.FromString,
                 )
+        self.saveModel = channel.unary_unary(
+                '/rpi.RPI/saveModel',
+                request_serializer=rpi__pb2.RequestModel.SerializeToString,
+                response_deserializer=rpi__pb2.Reply.FromString,
+                )
 
 
 class RPIServicer(object):
@@ -43,6 +48,12 @@ class RPIServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def saveModel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_RPIServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -54,6 +65,11 @@ def add_RPIServicer_to_server(servicer, server):
             'sendSensorData': grpc.unary_unary_rpc_method_handler(
                     servicer.sendSensorData,
                     request_deserializer=rpi__pb2.RequestSensorData.FromString,
+                    response_serializer=rpi__pb2.Reply.SerializeToString,
+            ),
+            'saveModel': grpc.unary_unary_rpc_method_handler(
+                    servicer.saveModel,
+                    request_deserializer=rpi__pb2.RequestModel.FromString,
                     response_serializer=rpi__pb2.Reply.SerializeToString,
             ),
     }
@@ -97,6 +113,23 @@ class RPI(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/rpi.RPI/sendSensorData',
             rpi__pb2.RequestSensorData.SerializeToString,
+            rpi__pb2.Reply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def saveModel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/rpi.RPI/saveModel',
+            rpi__pb2.RequestModel.SerializeToString,
             rpi__pb2.Reply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
