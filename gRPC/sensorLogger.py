@@ -103,6 +103,33 @@ startSensorLogger()
 sense.clear()
 while True:
   sleep(1)
+  if AC_State == 1:
+    sense.set_pixel(0, 0, (255, 0, 0))
+    sense.set_pixel(0, 1, (255, 0, 0))
+    sense.set_pixel(0, 2, (255, 0, 0))
+    sense.set_pixel(1, 2, (255, 0, 0))
+  else:
+    sense.set_pixel(0, 0, (0, 255, 0))
+    sense.set_pixel(0, 1, (0, 255, 0))
+    sense.set_pixel(0, 2, (0, 255, 0))
+    sense.set_pixel(1, 2, (0, 255, 0))
+  if Light_State == 1:
+    sense.set_pixel(5, 7, (255, 0, 0))
+    sense.set_pixel(6, 7, (255, 0, 0))
+    sense.set_pixel(7, 7, (255, 0, 0))
+    sense.set_pixel(5, 5, (255, 0, 0))
+    sense.set_pixel(6, 5, (255, 0, 0))
+    sense.set_pixel(7, 5, (255, 0, 0))
+    sense.set_pixel(4, 6, (255, 0, 0))
+  else:
+    sense.set_pixel(5, 7, (0, 255, 0))
+    sense.set_pixel(6, 7, (0, 255, 0))
+    sense.set_pixel(7, 7, (0, 255, 0))
+    sense.set_pixel(5, 5, (0, 255, 0))
+    sense.set_pixel(6, 5, (0, 255, 0))
+    sense.set_pixel(7, 5, (0, 255, 0))
+    sense.set_pixel(4, 6, (0, 255, 0))
+
   for event in sense.stick.get_events(): #on joystick press do action
 
     # Air-Conditioner TOGGLE
