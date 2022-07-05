@@ -112,32 +112,46 @@ while True:
     Light_State = file.readline().split("=")[1]
 
   # display led 
-  if AC_State == 1:
+  if Light_State == 1:
     sense.set_pixel(0, 0, (255, 0, 0))
     sense.set_pixel(0, 1, (255, 0, 0))
     sense.set_pixel(0, 2, (255, 0, 0))
-    sense.set_pixel(1, 2, (255, 0, 0))
+    sense.set_pixel(0, 3, (255, 0, 0))
+    sense.set_pixel(1, 3, (255, 0, 0))
+    sense.set_pixel(2, 3, (255, 0, 0))
   else:
     sense.set_pixel(0, 0, (0, 255, 0))
     sense.set_pixel(0, 1, (0, 255, 0))
     sense.set_pixel(0, 2, (0, 255, 0))
-    sense.set_pixel(1, 2, (0, 255, 0))
-  if Light_State == 1:
+    sense.set_pixel(0, 3, (0, 255, 0))
+    sense.set_pixel(1, 3, (0, 255, 0))
+    sense.set_pixel(2, 3, (0, 255, 0))
+
+  if AC_State == 1:
     sense.set_pixel(5, 7, (255, 0, 0))
-    sense.set_pixel(6, 7, (255, 0, 0))
     sense.set_pixel(7, 7, (255, 0, 0))
+
+    sense.set_pixel(5, 6, (255, 0, 0))
+    sense.set_pixel(7, 6, (255, 0, 0))
+
     sense.set_pixel(5, 5, (255, 0, 0))
-    sense.set_pixel(6, 5, (255, 0, 0))
     sense.set_pixel(7, 5, (255, 0, 0))
-    sense.set_pixel(4, 6, (255, 0, 0))
+
+    sense.set_pixel(6, 6, (255, 0, 0))
+    sense.set_pixel(6, 4, (255, 0, 0))
+
   else:
     sense.set_pixel(5, 7, (0, 255, 0))
-    sense.set_pixel(6, 7, (0, 255, 0))
     sense.set_pixel(7, 7, (0, 255, 0))
+
+    sense.set_pixel(5, 6, (0, 255, 0))
+    sense.set_pixel(7, 6, (0, 255, 0))
+
     sense.set_pixel(5, 5, (0, 255, 0))
-    sense.set_pixel(6, 5, (0, 255, 0))
     sense.set_pixel(7, 5, (0, 255, 0))
-    sense.set_pixel(4, 6, (0, 255, 0))
+
+    sense.set_pixel(6, 6, (0, 255, 0))
+    sense.set_pixel(6, 4, (0, 255, 0))
 
   sleep(1)
 
