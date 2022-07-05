@@ -56,7 +56,7 @@ def saveSensorData():
     dayHour = int(datetime.now().strftime("%H"))
     dayMin = int(datetime.now().strftime("%M"))
     sensehat_temp = sense.get_temperature()
-    temperature = str(round((temp - ((get_cpu_temp() - temp)/2.466)), 2))
+    temperature = str(round((sensehat_temp - ((get_cpu_temp() - sensehat_temp)/2.466)), 2))
     humidity = str(round(sense.get_humidity(),2))
     if AC_State == 0 and Light_State == 0:
         label = "nanl"

@@ -1,15 +1,16 @@
 from time import sleep
+from sense_hat import SenseHat
 import os
 from datetime import datetime, timedelta
 from pathlib import Path
 import threading
 import random
 import sys
+sense = SenseHat()
 
 events = {}
 
-# FOR TESTING I MADE IT DO EVERY 10s SAVING TO LOGS
-interval_secs = 1*60/60
+interval_secs = 1*60
 
 # Entry Inits
 now = datetime.now()
@@ -19,9 +20,9 @@ dayMin = 0
 temperature = 0
 humidity = 0
 AC = False
-AC_State = random.randint(0,1)
+AC_State = 0
 Light = False
-Light_State = random.randint(0,1)
+Light_State = 0
 AC_Temp = 0
 if len(sys.argv)==2:
   room = sys.argv[1]
@@ -33,7 +34,7 @@ label = ""
 def saveSensorData():
   global dayOfWeek,dayHour,dayMin,temperature,humidity,AC_State,Light_State,AC_Temp,room,label
   # Save if 10 minute mark
-  curr_min = int(datetime.now().strftime("%S")[1:])
+  curr_min = int(datetime.now().strftime("%M")[1:])
   if curr_min==0:
 
     #creates file if it doesn't exists
@@ -54,8 +55,9 @@ def saveSensorData():
     # get variables to save
     dayHour = int(datetime.now().strftime("%M"))
     dayMin = int(datetime.now().strftime("%S"))
-    temperature = randfloat(28, 37, 0.5)
-    humidity = randfloat(55, 95, 0.5)
+    sensehat_temp = sense.get_temperature()
+    temperature = str(round((sensehat_temp - ((get_cpu_temp() - sensehat_temp)/2.466)), 2))
+    humidity = str(round(sense.get_humidity(),2))
     if AC_State == 0 and Light_State == 0:
         label = "nanl"
     elif AC_State == 0 and Light_State == 1:
@@ -87,8 +89,72 @@ def startSensorLogger():
   threading.Timer(interval_secs, startSensorLogger).start()
   saveSensorData()
 
+def get_cpu_temp():
+  res = os.popen("vcgencmd measure_temp").readline()
+  t = float(res.replace("temp=","").replace("'C\n",""))
+  return(t)
+
 # for step based float random generation
 def randfloat(start, stop, step):
     return random.randint(0, int((stop - start) / step)) * step + start
 
 startSensorLogger()
+
+sense.clear()
+while True:
+  sleep(1)
+
+  for event in sense.stick.get_events(): #on joystick press do action
+
+    # Air-Conditioner TOGGLE
+    if event.direction == "up" and event.action == "pressed":
+      AC = not AC
+      if AC == True:
+        AC_State = 1
+      else:
+        AC_State = 0  
+
+    # Light TOGGLE
+    if event.direction == "down" and event.action == "pressed":
+      Light = not Light
+      if Light == True:
+        Light_State = 1
+      else:
+        Light_State = 0
+    
+    # display user action
+    print(event.direction, event.action)
+
+    # display led 
+    if AC_State == 1:
+      sense.set_pixel(0, 0, (255, 0, 0))
+      sense.set_pixel(0, 1, (255, 0, 0))
+      sense.set_pixel(0, 2, (255, 0, 0))
+      sense.set_pixel(1, 2, (255, 0, 0))
+    else:
+      sense.set_pixel(0, 0, (0, 255, 0))
+      sense.set_pixel(0, 1, (0, 255, 0))
+      sense.set_pixel(0, 2, (0, 255, 0))
+      sense.set_pixel(1, 2, (0, 255, 0))
+    if Light_State == 1:
+      sense.set_pixel(5, 7, (255, 0, 0))
+      sense.set_pixel(6, 7, (255, 0, 0))
+      sense.set_pixel(7, 7, (255, 0, 0))
+      sense.set_pixel(5, 5, (255, 0, 0))
+      sense.set_pixel(6, 5, (255, 0, 0))
+      sense.set_pixel(7, 5, (255, 0, 0))
+      sense.set_pixel(4, 6, (255, 0, 0))
+    else:
+      sense.set_pixel(5, 7, (0, 255, 0))
+      sense.set_pixel(6, 7, (0, 255, 0))
+      sense.set_pixel(7, 7, (0, 255, 0))
+      sense.set_pixel(5, 5, (0, 255, 0))
+      sense.set_pixel(6, 5, (0, 255, 0))
+      sense.set_pixel(7, 5, (0, 255, 0))
+      sense.set_pixel(4, 6, (0, 255, 0))
+
+    # on release, show all states
+    if event.action == "released":
+      print("AC State: ", AC_State)
+      print("Light State: ", Light_State)
+
