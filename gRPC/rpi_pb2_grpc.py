@@ -15,9 +15,14 @@ class RPIStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.processRoomData = channel.unary_unary(
-                '/rpi.RPI/processRoomData',
-                request_serializer=rpi__pb2.Request.SerializeToString,
+        self.askBehavior = channel.unary_unary(
+                '/rpi.RPI/askBehavior',
+                request_serializer=rpi__pb2.RequestBehavior.SerializeToString,
+                response_deserializer=rpi__pb2.Reply.FromString,
+                )
+        self.sendSensorData = channel.unary_unary(
+                '/rpi.RPI/sendSensorData',
+                request_serializer=rpi__pb2.RequestSensorData.SerializeToString,
                 response_deserializer=rpi__pb2.Reply.FromString,
                 )
 
@@ -26,7 +31,13 @@ class RPIServicer(object):
     """The greeting service definition.
     """
 
-    def processRoomData(self, request, context):
+    def askBehavior(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def sendSensorData(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -35,9 +46,14 @@ class RPIServicer(object):
 
 def add_RPIServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'processRoomData': grpc.unary_unary_rpc_method_handler(
-                    servicer.processRoomData,
-                    request_deserializer=rpi__pb2.Request.FromString,
+            'askBehavior': grpc.unary_unary_rpc_method_handler(
+                    servicer.askBehavior,
+                    request_deserializer=rpi__pb2.RequestBehavior.FromString,
+                    response_serializer=rpi__pb2.Reply.SerializeToString,
+            ),
+            'sendSensorData': grpc.unary_unary_rpc_method_handler(
+                    servicer.sendSensorData,
+                    request_deserializer=rpi__pb2.RequestSensorData.FromString,
                     response_serializer=rpi__pb2.Reply.SerializeToString,
             ),
     }
@@ -52,7 +68,7 @@ class RPI(object):
     """
 
     @staticmethod
-    def processRoomData(request,
+    def askBehavior(request,
             target,
             options=(),
             channel_credentials=None,
@@ -62,8 +78,25 @@ class RPI(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/rpi.RPI/processRoomData',
-            rpi__pb2.Request.SerializeToString,
+        return grpc.experimental.unary_unary(request, target, '/rpi.RPI/askBehavior',
+            rpi__pb2.RequestBehavior.SerializeToString,
+            rpi__pb2.Reply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def sendSensorData(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/rpi.RPI/sendSensorData',
+            rpi__pb2.RequestSensorData.SerializeToString,
             rpi__pb2.Reply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

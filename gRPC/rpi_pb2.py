@@ -14,18 +14,26 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\trpi.proto\x12\x03rpi\")\n\x07Request\x12\x10\n\x08roomName\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\"\x14\n\x05Reply\x12\x0b\n\x03res\x18\x01 \x01(\t24\n\x03RPI\x12-\n\x0fprocessRoomData\x12\x0c.rpi.Request\x1a\n.rpi.Reply\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\trpi.proto\x12\x03rpi\"1\n\x0fRequestBehavior\x12\x10\n\x08roomName\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\"6\n\x11RequestSensorData\x12\x10\n\x08roomName\x18\x01 \x01(\t\x12\x0f\n\x07\x63svdata\x18\x02 \x01(\t\"\x14\n\x05Reply\x12\x0b\n\x03res\x18\x01 \x01(\t2p\n\x03RPI\x12\x31\n\x0b\x61skBehavior\x12\x14.rpi.RequestBehavior\x1a\n.rpi.Reply\"\x00\x12\x36\n\x0esendSensorData\x12\x16.rpi.RequestSensorData\x1a\n.rpi.Reply\"\x00\x62\x06proto3')
 
 
 
-_REQUEST = DESCRIPTOR.message_types_by_name['Request']
+_REQUESTBEHAVIOR = DESCRIPTOR.message_types_by_name['RequestBehavior']
+_REQUESTSENSORDATA = DESCRIPTOR.message_types_by_name['RequestSensorData']
 _REPLY = DESCRIPTOR.message_types_by_name['Reply']
-Request = _reflection.GeneratedProtocolMessageType('Request', (_message.Message,), {
-  'DESCRIPTOR' : _REQUEST,
+RequestBehavior = _reflection.GeneratedProtocolMessageType('RequestBehavior', (_message.Message,), {
+  'DESCRIPTOR' : _REQUESTBEHAVIOR,
   '__module__' : 'rpi_pb2'
-  # @@protoc_insertion_point(class_scope:rpi.Request)
+  # @@protoc_insertion_point(class_scope:rpi.RequestBehavior)
   })
-_sym_db.RegisterMessage(Request)
+_sym_db.RegisterMessage(RequestBehavior)
+
+RequestSensorData = _reflection.GeneratedProtocolMessageType('RequestSensorData', (_message.Message,), {
+  'DESCRIPTOR' : _REQUESTSENSORDATA,
+  '__module__' : 'rpi_pb2'
+  # @@protoc_insertion_point(class_scope:rpi.RequestSensorData)
+  })
+_sym_db.RegisterMessage(RequestSensorData)
 
 Reply = _reflection.GeneratedProtocolMessageType('Reply', (_message.Message,), {
   'DESCRIPTOR' : _REPLY,
@@ -38,10 +46,12 @@ _RPI = DESCRIPTOR.services_by_name['RPI']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _REQUEST._serialized_start=18
-  _REQUEST._serialized_end=59
-  _REPLY._serialized_start=61
-  _REPLY._serialized_end=81
-  _RPI._serialized_start=83
-  _RPI._serialized_end=135
+  _REQUESTBEHAVIOR._serialized_start=18
+  _REQUESTBEHAVIOR._serialized_end=67
+  _REQUESTSENSORDATA._serialized_start=69
+  _REQUESTSENSORDATA._serialized_end=123
+  _REPLY._serialized_start=125
+  _REPLY._serialized_end=145
+  _RPI._serialized_start=147
+  _RPI._serialized_end=259
 # @@protoc_insertion_point(module_scope)

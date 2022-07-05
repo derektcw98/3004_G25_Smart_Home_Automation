@@ -16,8 +16,8 @@
 from concurrent import futures
 import logging
 import sys
-import os
-import json
+from pathlib import Path
+from datetime import datetime, timedelta
 
 import grpc
 import rpi_pb2
@@ -38,21 +38,19 @@ print(channel_to_use)
 
 class RPI(rpi_pb2_grpc.RPIServicer):
 
-    def processRoomData(self, request, context):
-        #process data
-
+    def sendSensorData(self, request, context):
+        #Upload data to database
         room_name = request.roomName
-        print(room_name)
-        room_data = request.data
-        print(room_data)
+        room_data = request.csvdata
 
-        interval = ""
-        command = ""
-
-        # set instructions to return to client
-        instructions = interval + "," + command
-
-        return rpi_pb2.Reply(res=instructions)
+        startOfWeek_dmy = datetime.now().strftime("%d%m%Y")
+        file_path = room_name + "_" + str(startOfWeek_dmy) + ".csv"
+        path = Path(file_path)
+        path.touch(exist_ok=True)
+        with  open(file_path, 'w') as file:
+            file.write(room_data)
+        result = "Data has been successfully received by server"
+        return rpi_pb2.Reply(res=result)
 
 
 
