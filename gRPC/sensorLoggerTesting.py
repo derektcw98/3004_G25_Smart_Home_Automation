@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import threading
 import random
+import sys
 
 events = {}
 
@@ -22,7 +23,10 @@ AC_State = random.randint(0,1)
 Light = False
 Light_State = random.randint(0,1)
 AC_Temp = 0
-room = "X_Room"
+if len(sys.argv)==2:
+  room = sys.argv[1]
+else:
+  room = "Default_Room"
 label = ""
 
 # Saving of sensor data function
@@ -48,8 +52,8 @@ def saveSensorData():
       file_path = room + "_" + str(startOfWeek_dmy) + ".csv"
       
     # get variables to save
-    dayHour = int(datetime.now().strftime("%H"))
-    dayMin = int(datetime.now().strftime("%M"))
+    dayHour = int(datetime.now().strftime("%M"))
+    dayMin = int(datetime.now().strftime("%S"))
     temperature = randfloat(28, 37, 0.5)
     humidity = randfloat(55, 95, 0.5)
     if AC_State == 0 and Light_State == 0:
@@ -64,7 +68,7 @@ def saveSensorData():
     # form new entry
     entry = ""
     entry += str(dayOfWeek) + ","
-    entry += str(dayHour) + ","
+    entry += str(dayHour%24) + ","
     entry += str(dayMin) + ","
     entry += str(temperature) + ","
     entry += str(humidity) + ","

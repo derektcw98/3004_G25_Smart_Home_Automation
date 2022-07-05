@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import threading
 import random
-
+import sys
 sense = SenseHat()
 
 events = {}
@@ -24,7 +24,10 @@ AC_State = 0
 Light = False
 Light_State = 0
 AC_Temp = 0
-room = "X_Room"
+if len(sys.argv)==2:
+  room = sys.argv[1]
+else:
+  room = "Default_Room"
 label = ""
 
 # Saving of sensor data function
