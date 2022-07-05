@@ -1,16 +1,14 @@
 from time import sleep
-from sense_hat import SenseHat
 import os
 from datetime import datetime, timedelta
 from pathlib import Path
 import threading
 import random
 
-sense = SenseHat()
-
 events = {}
 
-interval_secs = 1*60
+# FOR TESTING I MADE IT DO EVERY 10s SAVING TO LOGS
+interval_secs = 1*60/60
 
 # Entry Inits
 now = datetime.now()
@@ -20,9 +18,9 @@ dayMin = 0
 temperature = 0
 humidity = 0
 AC = False
-AC_State = 0
+AC_State = random.randint(0,1)
 Light = False
-Light_State = 0
+Light_State = random.randint(0,1)
 AC_Temp = 0
 room = "X_Room"
 label = ""
@@ -31,7 +29,7 @@ label = ""
 def saveSensorData():
   global dayOfWeek,dayHour,dayMin,temperature,humidity,AC_State,Light_State,AC_Temp,room,label
   # Save if 10 minute mark
-  curr_min = int(datetime.now().strftime("%M")[1:])
+  curr_min = int(datetime.now().strftime("%S")[1:])
   if curr_min==0:
 
     #creates file if it doesn't exists
@@ -52,9 +50,8 @@ def saveSensorData():
     # get variables to save
     dayHour = int(datetime.now().strftime("%H"))
     dayMin = int(datetime.now().strftime("%M"))
-    sensehat_temp = sense.get_temperature()
-    temperature = str(round((temp - ((get_cpu_temp() - temp)/2.466)), 2))
-    humidity = str(round(sense.get_humidity(),2))
+    temperature = randfloat(28, 37, 0.5)
+    humidity = randfloat(55, 95, 0.5)
     if AC_State == 0 and Light_State == 0:
         label = "nanl"
     elif AC_State == 0 and Light_State == 1:
@@ -96,33 +93,3 @@ def randfloat(start, stop, step):
     return random.randint(0, int((stop - start) / step)) * step + start
 
 startSensorLogger()
-
-sense.clear()
-while True:
-  sleep(1)
-  for event in sense.stick.get_events(): #on joystick press do action
-
-    # Air-Conditioner TOGGLE
-    if event.direction == "up" and event.action == "pressed":
-      AC = not AC
-      if AC == True:
-        AC_State = 1
-      else:
-        AC_State = 0  
-
-    # Light TOGGLE
-    if event.direction == "down" and event.action == "pressed":
-      Light = not Light
-      if Light == True:
-        Light_State = 1
-      else:
-        Light_State = 0
-    
-    # display user action
-    print(event.direction, event.action)
-
-    # on release, show all states
-    if event.action == "released":
-      print("AC State: " + AC_State)
-      print("Light State: " + Light_State)
-
