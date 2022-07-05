@@ -59,6 +59,29 @@ class RPI(rpi_pb2_grpc.RPIServicer):
 
         return rpi_pb2.Reply(res=result)
 
+    # def saveModel(self, request_iterator, context):
+
+    #     # TODO: call prediction model on server container with request.data and return to client
+    #     modelData = ""
+    #     # for roomName in request_iterator.roomName:
+    #     #     room_name = room_name
+    #     for data in request_iterator:
+    #         print("transferring")
+    #         modelData += str(data)
+
+    #     file_path = "test" + "_predictionModel" + ".png"
+    #     file = Path(file_path)
+    #     if not file.exists:
+    #         file.touch(exist_ok=True)
+
+    #     try:
+    #         with open(file_path,"wb") as file:
+    #             file.write(modelData)
+    #         return rpi_pb2.Reply(res="Server received model")
+    #     except:
+    #         return rpi_pb2.Reply(res="Error receiving model")
+        
+
 
 #basic step to run the server
 def serve():

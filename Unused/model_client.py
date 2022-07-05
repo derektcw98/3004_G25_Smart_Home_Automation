@@ -23,6 +23,7 @@ import json
 from pathlib import Path
 
 import grpc
+from numpy import empty
 import rpi_pb2
 import rpi_pb2_grpc
 from datetime import datetime, timedelta
@@ -41,15 +42,29 @@ except:
 channel_to_use = ipaddr+":"+port
 print(channel_to_use)
 
+# def makeChunk(chunk):
+#     return rpi_pb2.RequestModel(model = chunk)
+
+# def readInChunks():
+#     with open("output.png","rb") as file:
+#         while True:
+#             data = str(file.read(1073741824))
+#             if not data:
+#                 break
+#             yield makeChunk(data)
+
 def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
     # used in circumstances in which the with sstatement does not fit the needs
     # of the code.
     with grpc.insecure_channel(channel_to_use) as channel:
         stub = rpi_pb2_grpc.RPIStub(channel)
+        # data = stub.saveModel(readInChunks())
 
-        while True:
-            pass
+        # with open("knnPrediction.joblib","rb") as file:
+        #     for piece in readInChunks(file):
+        #         print(piece)
+        #         data = stub.saveModel(rpi_pb2.RequestModel(roomName = "testRoom", model = piece))
         
 
 

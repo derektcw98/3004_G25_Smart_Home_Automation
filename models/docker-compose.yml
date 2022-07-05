@@ -6,4 +6,8 @@ services:
     container_name: generateModel
     volumes:
       - D:\Git Repos\3004_G25_Smart_Home_Automation\models:/home/jovyan
-    
+  # server:
+  #   image: eazi98/gRPCServer:latest
+  #   container_name: grpcserver
+  #   volumes:
+  #     - D:\Git Repos\3004_G25_Smart_Home_Automation\models:/home/jovyan #replace /home/jovyan with the directory the grpcServer is on
