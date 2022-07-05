@@ -153,6 +153,6 @@ while True:
 
     # on release, show all states
     if event.action == "released":
-      print("AC State: " + AC_State)
-      print("Light State: " + Light_State)
+      print("AC State: ", AC_State)
+      print("Light State: ", Light_State)
 
