@@ -17,7 +17,7 @@ X = X.drop('room', axis = 1)
 # load the model from disk
 loaded_model = load(open('D:/Git Repos/3004_G25_Smart_Home_Automation/models/knnPrediction.joblib', 'rb')) #knnPrediction can be replaced with newer model
 result = loaded_model.predict(X)#[[6,9,50,21,23.68,0,0,24]] this is one data
-nearest = loaded_model.kneighbors(X)[1] #returns 
+nearest = loaded_model.kneighbors(X)[1] #returns index of neighbors
 # replace with a command to trigger actuator/ update state
 print(result)
 
@@ -40,4 +40,7 @@ count = 0
 for i in nearest[0]:
     count += 1
     temp += dataForTemp.iloc[i]["aircon_temp"]
-print(int(round((temp/count),0)))
+avgTemp = (int(round((temp/count),0)))
+print(avgTemp)
+
+# put result and avgTemp into a file
