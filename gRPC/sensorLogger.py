@@ -116,9 +116,6 @@ while True:
     AC_State = int(file.readline().split("=")[1])
     Light_State = int(file.readline().split("=")[1])
     AC_Temp = int(file.readline().split("=")[1])
-    print("AC_State: ", AC_State)
-    print("Light_State: ", Light_State)
-    print("AC_Temp: ", AC_Temp)
 
   # display led 
   checkLightState(Light_State)
