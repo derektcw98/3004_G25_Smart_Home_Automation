@@ -21,7 +21,7 @@ def predictClass(roomName, dataToPredict):
     # To predict on edge device
     # load the model from disk
     cwd = Path(os.getcwd())    
-    model_path = cwd.parent.absolute()+"\\sharedDirectory\\"+roomName+"_knnPrediction.joblib"
+    model_path = str(cwd.parent.absolute())+"\\sharedDirectory\\"+roomName+"_knnPrediction.joblib"
 
     loaded_model = load(open(model_path, 'rb')) #knnPrediction can be replaced with newer model
     result = loaded_model.predict(X)#[[6,9,50,21,23.68,0,0,24]] this is one data
@@ -30,7 +30,7 @@ def predictClass(roomName, dataToPredict):
     print("Prediction result: ", result)
 
     # get original csv that model generated from
-    csv_path = cwd.parent.absolute()+"\\sharedDirectory\\"+roomName+"_training_data.csv"
+    csv_path = str(cwd.parent.absolute())+"\\sharedDirectory\\"+roomName+"_training_data.csv"
     checkTempData = pd.read_csv(csv_path, header= None)
     checkTempData.columns = ["day", "hour", "minute", "temperature", "humidity", "light_state", "aircon_state", "aircon_temp", "room"]
     dataForTemp = checkTempData
