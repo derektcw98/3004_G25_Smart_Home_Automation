@@ -34,8 +34,6 @@ def checkLightState(state):
     else:
         print("invalid state")
 
-
-
 def checkAirconTemp(temp):
     firstDigit  = temp[0]
     secondDigit = temp[1]

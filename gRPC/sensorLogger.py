@@ -1,5 +1,7 @@
 from time import sleep
+from gRPC.led import checkAirconState, checkAirconTemp, checkLightState
 from sense_hat import SenseHat
+import led
 import os
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -120,49 +122,9 @@ while True:
     print("AC_Temp: ", AC_Temp)
 
   # display led 
-  if Light_State == 1:
-    sense.set_pixel(0, 0, (255, 0, 0))
-    sense.set_pixel(0, 1, (255, 0, 0))
-    sense.set_pixel(0, 2, (255, 0, 0))
-    sense.set_pixel(0, 3, (255, 0, 0))
-    sense.set_pixel(1, 3, (255, 0, 0))
-    sense.set_pixel(2, 3, (255, 0, 0))
-  else:
-    sense.set_pixel(0, 0, (0, 255, 0))
-    sense.set_pixel(0, 1, (0, 255, 0))
-    sense.set_pixel(0, 2, (0, 255, 0))
-    sense.set_pixel(0, 3, (0, 255, 0))
-    sense.set_pixel(1, 3, (0, 255, 0))
-    sense.set_pixel(2, 3, (0, 255, 0))
-
-  if AC_State == 1:
-    sense.set_pixel(5, 7, (255, 0, 0))
-    sense.set_pixel(7, 7, (255, 0, 0))
-
-    sense.set_pixel(5, 6, (255, 0, 0))
-    sense.set_pixel(7, 6, (255, 0, 0))
-
-    sense.set_pixel(5, 5, (255, 0, 0))
-    sense.set_pixel(7, 5, (255, 0, 0))
-
-    sense.set_pixel(6, 6, (255, 0, 0))
-    sense.set_pixel(6, 4, (255, 0, 0))
-
-  else:
-    sense.set_pixel(5, 7, (0, 255, 0))
-    sense.set_pixel(7, 7, (0, 255, 0))
-
-    sense.set_pixel(5, 6, (0, 255, 0))
-    sense.set_pixel(7, 6, (0, 255, 0))
-
-    sense.set_pixel(5, 5, (0, 255, 0))
-    sense.set_pixel(7, 5, (0, 255, 0))
-
-    sense.set_pixel(6, 6, (0, 255, 0))
-    sense.set_pixel(6, 4, (0, 255, 0))
-    # add pixel lighting for ac temp here
-
-
+  checkLightState(Light_State)
+  checkAirconState(AC_State)
+  checkAirconTemp(AC_Temp)
   sleep(1)
 
   AC_State_New = 5
