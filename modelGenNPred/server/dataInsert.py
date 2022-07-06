@@ -23,7 +23,7 @@ def insert(engine):
 
     # dataframe into mariadb
     with engine.begin() as conn:
-        df = pd.read_csv('models/data.csv')
+        df = pd.read_csv('modelGenNPred/models/data.csv')
         df.columns = ["day", "hour", "minute", "temperature", "humidity",
                       "light_state", "aircon_state", "aircon_temp", "room", "label"]
         now = datetime.datetime.now().date()
@@ -34,7 +34,7 @@ def insert(engine):
 
 if __name__ == '__main__':
     #need to change local host to ip of Db
-    engine = engine('localhost', 3306, 'homedb', 'root', 'mypass')
+    engine = engine('localhost', 3306, 'homedb', 'root', 'mariasama')
     engine.execute("create table if not exists sensors (date DATE NOT NULL, day int NOT NULL, hour int NOT NULL, minute int NOT NULL, temperature double NOT NULL, humidity double NOT NULL, light_state tinyint(1) NOT NULL, aircon_state tinyint(1) NOT NULL, aircon_temp int NOT NULL, room varchar(9) NOT NULL, label char(4) NOT NULL)")
     insert(engine)
 

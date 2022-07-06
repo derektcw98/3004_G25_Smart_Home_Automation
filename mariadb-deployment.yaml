@@ -1,0 +1,110 @@
+# kubectl create -f mariadb-deployment.yaml
+# kubectl get pod
+# kubectl exec -it mariadb-xxxxxxxxxxxxxx /bin/sh
+# mysql -u root -p | mariasama
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mariadb
+    clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadbalance
+  labels:
+    app: mariadb
+    type: database
+spec:
+  selector:
+    app: mariadb
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  externalTrafficPolicy: Cluster
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+      - ip: 127.0.0.1
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-pv-claim
+  labels:
+    app: mariadb
+    type: database
+spec:
+  resources:
+    requests:
+      storage: 5Gi
+  # volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  # persistentVolumeReclaimPolicy: Recycle
+  # storageClassName: slow
+  # mountOptions:
+  #   - hard
+  #   - nfsvers=4.1
+  # nfs:
+  #   path: /tmp
+  #   server: 172.17.0.2
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mariasecret
+data:
+  MYSQL_ROOT_PASSWORD: bWFyaWFzYW1h
+type: Opaque
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  labels:
+    app: mariadb
+    type: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb
+        type: database
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:latest
+          volumeMounts:
+            - name: mariadb-persistent
+              mountPath: /var/lib/mysql
+          ports:
+            - name: mariadb-port
+              containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariasecret
+                  key: MYSQL_ROOT_PASSWORD
+                  optional: false
+            - name: MYSQL_DATABASE
+              value: homedb
+      volumes:
+        - name: mariadb-persistent
+          persistentVolumeClaim:
+            claimName: mariadb-pv-claim
