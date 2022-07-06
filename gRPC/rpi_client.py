@@ -33,6 +33,10 @@ ipaddr = "localhost"
 port = "50051"
 room = "default"
 
+AC_State = 0
+Light_State = 0
+AC_Temp = 0
+
 try:
     ipaddr = sys.argv[1]
     port = sys.argv[2]
@@ -61,6 +65,7 @@ def sensorDataSend(stub, string):
         sleep(1*60*60)
 
 def run():
+    global AC_State,Light_State,AC_Temp
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
     # used in circumstances in which the with sstatement does not fit the needs
     # of the code.
@@ -83,7 +88,7 @@ def run():
                 file_path = room + "_" + str(now.strftime("%d%m%Y")) + ".csv"
                 
             # Every 10mins run the following (1min after csv updated)
-            curr_min = int(now.strftime("%M")[1:])            
+            curr_min = int(now.strftime("%M")[1:])             
             if curr_min==1:
                 # for days besides monday, assign file_path to monday's date
                 with open(file_path, 'r') as f:
