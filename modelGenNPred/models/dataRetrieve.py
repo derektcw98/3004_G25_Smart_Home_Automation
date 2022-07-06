@@ -6,6 +6,7 @@ import sqlalchemy
 # access mariadb
 # mysql --host=192.168.1.16 --port=3306 -u root -p
 
+# TODO: once a week run to pull data from db and save as respective csv
 
 def engine(host, port, database, user, password):
     engine = sqlalchemy.create_engine(
@@ -20,7 +21,7 @@ def engine(host, port, database, user, password):
 def retrieveMonthPandas(engine, room):
     conn = engine.raw_connection()
     c = conn.cursor()
-    query = """SELECT day, hour, minute, temperature, humidity, light_state, aircon_state, aircon_temp, room, class from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 1 month) and curdate()"""
+    query = """SELECT day, hour, minute, temperature, humidity, light_state, aircon_state, aircon_temp, room from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 1 month) and curdate()"""
 
     df = pd.read_sql_query(sql=query, con=engine, params={"roomname": room})
     df.to_csv('test.csv', index=False, header=None)

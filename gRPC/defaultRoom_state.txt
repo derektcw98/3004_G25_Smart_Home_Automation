@@ -1,2 +1,0 @@
-AC_State=1
-Light_State=1

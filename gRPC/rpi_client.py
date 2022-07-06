@@ -94,11 +94,22 @@ def run():
                 response = stub.askBehavior(rpi_pb2.RequestBehavior(roomName = room, data = latest_data))
 
             # Behavior returned
-            returned_label = response.res
+            returned_label, AC_Temp = str(response.res).split(",")
             print(returned_label)
 
+            
+            # read state file/create if doesn't exist yet
+            states_path = str(room) + "_state.txt"
+            states_file = Path(states_path)
+
+            if not states_file.exists():
+                states_file.touch(exist_ok=True)
+                with open(states_path, "w") as file:
+                    file.write("AC_State=0\nLight_State=0\nAC_Temp=26")
+
             # TODO: Change states on RPI
-            if returned_label != latest_data:
+            # TODO: latest_data need compare with last col (split)
+            if returned_label != latest_data.split(",")[-1]:
                 if returned_label[0] == 'g':
                     AC_State = 1
                 elif returned_label[0] == 'n':
@@ -108,8 +119,11 @@ def run():
                     Light_State = 1
                 elif returned_label[2] == 'n':
                     Light_State = 0
-            
-            # write to states file
+                    
+                # if any state changed, update state.txt
+                with open(states_path, "w") as file:
+                    file.write("AC_State=" + str(AC_State) + "\nLight_State=" + str(Light_State) + "\AC_Temp=" + str(AC_Temp))
+
 
             # system sleep for a minute
             sleep(1*60)

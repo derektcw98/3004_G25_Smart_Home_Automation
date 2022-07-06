@@ -18,6 +18,8 @@ import sys
 from pathlib import Path
 from datetime import datetime, timedelta
 
+from predictClass import predictClass
+
 import grpc
 import rpi_pb2
 import rpi_pb2_grpc
@@ -52,11 +54,8 @@ class RPI(rpi_pb2_grpc.RPIServicer):
         return rpi_pb2.Reply(res=result)
 
     def askBehavior(self, request, context):
-
-        # TODO: call prediction model on server container with request.data and return to client
-
-        result = "nagl"
-
+        # Get prediction based on request.data
+        result = predictClass(request.roomName, request.data)
         return rpi_pb2.Reply(res=result)
 
     # def saveModel(self, request_iterator, context):

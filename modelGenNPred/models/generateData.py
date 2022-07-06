@@ -4,7 +4,7 @@ import pandas
 
 #generate data based on common usual behaviours
 
-#day of week, hour, min, temperature, humidity, light on/off, aircon on/off, aircon temp, room, class
+#day of week, hour, min, temperature, humidity, light on/off, aircon on/off, aircon temp, room, label
 
 # for step based float random generation
 def randfloat(start, stop, step):
@@ -74,25 +74,8 @@ with open('dataTest.csv', 'w') as f:
 
                 # set random aircon temperature
                 aircon_temp = randfloat(23, 29, 0.5)
-
-                # #class generation
-                # if air_con == 0 and light == 0 and day < 5:
-                #     label = "wddc"
-                # elif air_con == 0 and light == 1 and day < 5:
-                #     label = "wdnc"
-                # elif air_con == 1 and light == 0 and day < 5: 
-                #     label = "wddh"
-                # elif air_con == 1 and light == 1 and day < 5:
-                #     label = "wdnh"
-                # elif air_con == 0 and light == 0 and day >= 5:
-                #     label = "wedc"
-                # elif air_con == 0 and light == 1 and day >= 5:
-                #     label = "wenc"
-                # elif air_con == 1 and light == 0 and day >= 5: 
-                #     label = "wedh"
-                # elif air_con == 1 and light == 1 and day >= 5:
-                #     label = "wenh"
-                #class generation (suppose to use data to produce result whether to turn on or off light/air_con)
+                
+                #label generation (suppose to use data to produce result whether to turn on or off light/air_con)
                 if air_con == 0 and light == 0:
                     label = "nanl"
                 elif air_con == 0 and light == 1:

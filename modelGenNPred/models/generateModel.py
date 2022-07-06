@@ -10,10 +10,10 @@ def generateModel():
     #Read data from CSV generated from databbase here
     df = pd.read_csv('noclass.csv')
 
-    ## Class generation done on client instead ##
+    ## Label generation done on client instead ##
     # labels = []
 
-    # #Create class based on device states
+    # #Create label based on device states
     # for i in df.index:
     #     lightState = int(df.iloc[i,5])
     #     airconState = int(df.iloc[i,6])
@@ -27,18 +27,18 @@ def generateModel():
     #         label = "gagl"
     #     labels.append(label)
 
-    # df.insert(9,"class", labels, True)
+    # df.insert(9,"label", labels, True)
 
     # Add in column names
-    # day of week, time, temperature, humidity, light on/off, aircon on/off, aircon temp, room, class
-    df.columns = ["day", "hour", "minute", "temperature", "humidity", "aircon_temp", "room", "class"]
+    # day of week, time, temperature, humidity, light on/off, aircon on/off, aircon temp, room, label
+    df.columns = ["day", "hour", "minute", "temperature", "humidity", "aircon_temp", "room", "label"]
 
 
     # tentatively reduced to 5 features for POC
-    y = df['class']
+    y = df['label']
 
     #Reduce features
-    X = df.drop('class', axis =1)
+    X = df.drop('label', axis =1)
     X = X.drop('aircon_temp', axis = 1)
     X = X.drop('room', axis = 1)
 

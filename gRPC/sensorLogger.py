@@ -27,7 +27,7 @@ AC_Temp = 0
 if len(sys.argv)==2:
   room = sys.argv[1]
 else:
-  room = "defaultRoom"
+  room = "default"
 label = ""
 
 # Saving of sensor data function
@@ -107,16 +107,17 @@ states_file = Path(states_path)
 if not states_file.exists():
   states_file.touch(exist_ok=True)
   with open(states_path, "w") as file:
-    file.write("AC_State=0\nLight_State=0")
+    file.write("AC_State=0\nLight_State=0\nAC_Temp=26")
 
 sense.clear()
 while True:
-  print("new iteration")
   with open(states_path, "r") as file:
     AC_State = int(file.readline().split("=")[1])
     Light_State = int(file.readline().split("=")[1])
+    AC_Temp = int(file.readline().split("=")[1])
     print("AC_State: ", AC_State)
     print("Light_State: ", Light_State)
+    print("AC_Temp: ", AC_Temp)
 
   # display led 
   if Light_State == 1:
@@ -159,6 +160,8 @@ while True:
 
     sense.set_pixel(6, 6, (0, 255, 0))
     sense.set_pixel(6, 4, (0, 255, 0))
+    # add pixel lighting for ac temp here
+
 
   sleep(1)
 
@@ -186,11 +189,11 @@ while True:
     # if any state changed, update state.txt
     if int(AC_State_New) != 5:
       with open(states_path, "w") as file:
-        file.write("AC_State=" + str(AC_State_New) + "\nLight_State=" + str(Light_State))
+        file.write("AC_State=" + str(AC_State_New) + "\nLight_State=" + str(Light_State) + "\AC_Temp=" + str(AC_Temp))
 
     elif int(Light_State_New) != 5:
       with open(states_path, "w") as file:
-        file.write("AC_State=" + str(AC_State) + "\nLight_State=" + str(Light_State_New))
+        file.write("AC_State=" + str(AC_State) + "\nLight_State=" + str(Light_State_New) + "\AC_Temp=" + str(AC_Temp))
 
     # display user action
     print(event.direction, event.action)
