@@ -40,4 +40,4 @@ count = 0
 for i in nearest[0]:
     count += 1
     temp += dataForTemp.iloc[i]["aircon_temp"]
-print(int(temp/count))
+print(int(round((temp/count),0)))
