@@ -1,7 +1,6 @@
 from time import sleep
-from gRPC.led import checkAirconState, checkAirconTemp, checkLightState
+from led import checkAirconState, checkAirconTemp, checkLightState
 from sense_hat import SenseHat
-import led
 import os
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -151,14 +150,11 @@ while True:
     # if any state changed, update state.txt
     if int(AC_State_New) != 5:
       with open(states_path, "w") as file:
-        file.write("AC_State=" + str(AC_State_New) + "\nLight_State=" + str(Light_State) + "\AC_Temp=" + str(AC_Temp))
+        file.write("AC_State=" + str(AC_State_New) + "\nLight_State=" + str(Light_State) + "\nAC_Temp=" + str(AC_Temp))
 
     elif int(Light_State_New) != 5:
       with open(states_path, "w") as file:
-        file.write("AC_State=" + str(AC_State) + "\nLight_State=" + str(Light_State_New) + "\AC_Temp=" + str(AC_Temp))
-
-    # display user action
-    print(event.direction, event.action)
+        file.write("AC_State=" + str(AC_State) + "\nLight_State=" + str(Light_State_New) + "\nAC_Temp=" + str(AC_Temp))
 
     # on release, show all states
     if event.action == "released":

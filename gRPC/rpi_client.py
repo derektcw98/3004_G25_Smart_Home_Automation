@@ -107,8 +107,6 @@ def run():
                 with open(states_path, "w") as file:
                     file.write("AC_State=0\nLight_State=0\nAC_Temp=26")
 
-            # TODO: Change states on RPI
-            # TODO: latest_data need compare with last col (split)
             if returned_label != latest_data.split(",")[-1]:
                 if returned_label[0] == 'g':
                     AC_State = 1
@@ -122,7 +120,7 @@ def run():
                     
                 # if any state changed, update state.txt
                 with open(states_path, "w") as file:
-                    file.write("AC_State=" + str(AC_State) + "\nLight_State=" + str(Light_State) + "\AC_Temp=" + str(AC_Temp))
+                    file.write("AC_State=" + str(AC_State) + "\nLight_State=" + str(Light_State) + "\nAC_Temp=" + str(AC_Temp))
 
 
             # system sleep for a minute
