@@ -5,6 +5,8 @@ from sklearn.metrics import accuracy_score
 from joblib import dump
 from datetime import datetime
 from time import sleep
+from pathlib import Path
+import os
 
 def generateModel(room,dataframe):
     #Read data from dataframe passed in
@@ -57,22 +59,12 @@ def generateModel(room,dataframe):
     classifier.fit(X_train, y_train)
 
     # source, destination 
-    dump(classifier, room +'_knnPrediction.joblib')  
+    cwd = Path(os.getcwd())    
+    model_path = str(cwd.parent.absolute())+"\\sharedDirectory\\"+room+"_knnPrediction.joblib"
+    dump(classifier, model_path)  
     print("Model Saved")
     # #To predict on edge device
     # # load the model from disk
     # loaded_model = pickle.load(open('knnPrediction', 'rb'))
     # result = loaded_model.predict(X_test)
     # print(result)
-
-# while True:
-#     now = datetime.now()
-#     dayOfWeek = now.weekday()
-#     print(dayOfWeek)
-#     if dayOfWeek == 1:
-#         #generate model
-#         print("generating model")
-#         generateModel()
-#     #wait to check day
-#     print("Awaiting next day...")
-#     sleep(60*60*24)
