@@ -95,37 +95,37 @@ def run():
                     lines = f.read().splitlines()
                     latest_data = lines[-1]
                     print("latest record: ", latest_data)
-                
+                    
                 response = stub.askBehavior(rpi_pb2.RequestBehavior(roomName = room, data = latest_data))
 
-            # Behavior returned
-            returned_label, AC_Temp = str(response.res).split(",")
-            print(returned_label)
+                # Behavior returned
+                returned_label, AC_Temp = str(response.res).split(",")
+                print(returned_label)
 
             
-            # read state file/create if doesn't exist yet
-            states_path = str(room) + "_state.txt"
-            states_file = Path(states_path)
+                # read state file/create if doesn't exist yet
+                states_path = str(room) + "_state.txt"
+                states_file = Path(states_path)
 
-            if not states_file.exists():
-                states_file.touch(exist_ok=True)
-                with open(states_path, "w") as file:
-                    file.write("AC_State=0\nLight_State=0\nAC_Temp=26")
+                if not states_file.exists():
+                    states_file.touch(exist_ok=True)
+                    with open(states_path, "w") as file:
+                        file.write("AC_State=0\nLight_State=0\nAC_Temp=26")
 
-            if returned_label != latest_data.split(",")[-1]:
-                if returned_label[0] == 'g':
-                    AC_State = 1
-                elif returned_label[0] == 'n':
-                    AC_State = 0
+                if returned_label != latest_data.split(",")[-1]:
+                    if returned_label[0] == 'g':
+                        AC_State = 1
+                    elif returned_label[0] == 'n':
+                        AC_State = 0
 
-                if returned_label[2] == 'g':
-                    Light_State = 1
-                elif returned_label[2] == 'n':
-                    Light_State = 0
-                    
-                # if any state changed, update state.txt
-                with open(states_path, "w") as file:
-                    file.write("AC_State=" + str(AC_State) + "\nLight_State=" + str(Light_State) + "\nAC_Temp=" + str(AC_Temp))
+                    if returned_label[2] == 'g':
+                        Light_State = 1
+                    elif returned_label[2] == 'n':
+                        Light_State = 0
+                        
+                    # if any state changed, update state.txt
+                    with open(states_path, "w") as file:
+                        file.write("AC_State=" + str(AC_State) + "\nLight_State=" + str(Light_State) + "\nAC_Temp=" + str(AC_Temp))
 
 
             # system sleep for a minute
