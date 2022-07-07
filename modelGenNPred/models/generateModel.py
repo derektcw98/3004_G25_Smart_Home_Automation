@@ -6,28 +6,12 @@ from joblib import dump
 from datetime import datetime
 from time import sleep
 
-def generateModel():
-    #Read data from CSV generated from databbase here
-    df = pd.read_csv('noclass.csv')
+def generateModel(room,dataframe):
+    #Read data from dataframe passed in
+    df = dataframe
 
     ## Label generation done on client instead ##
     # labels = []
-
-    # #Create label based on device states
-    # for i in df.index:
-    #     lightState = int(df.iloc[i,5])
-    #     airconState = int(df.iloc[i,6])
-    #     if airconState == 0 and lightState == 0:
-    #         label = "nanl"
-    #     elif airconState == 0 and lightState == 1:
-    #         label = "nagl"
-    #     elif airconState == 1 and lightState == 0: 
-    #         label = "ganl"
-    #     elif airconState == 1 and lightState == 1:
-    #         label = "gagl"
-    #     labels.append(label)
-
-    # df.insert(9,"label", labels, True)
 
     # Add in column names
     # day of week, time, temperature, humidity, light on/off, aircon on/off, aircon temp, room, label
@@ -43,7 +27,7 @@ def generateModel():
     X = X.drop('room', axis = 1)
 
     #Split into test and training set
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=100)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
 
     # Generate model for exporting
     n = 5
@@ -56,7 +40,7 @@ def generateModel():
     print("Target Accuracy: " + str(round(targetAccuracy,4)),"Accuracy: " + str(round(accuracy,4)))
 
     #if accuracy less than 98% of training accuracyy, add neighbours
-    while accuracy <= (0.98* targetAccuracy): #adjust multiplier accordingly
+    while accuracy <= (0.975* targetAccuracy): #adjust multiplier accordingly
         n += 2
         classifier = KNeighborsClassifier(n_neighbors=n)
         classifier.fit(X_train, y_train)
@@ -69,14 +53,11 @@ def generateModel():
         print("Target Accuracy Reached")
 
     #Create model to export
-    knnPickle = open('knnPrediction', 'wb') 
-
     classifier = KNeighborsClassifier(n_neighbors=n)
     classifier.fit(X_train, y_train)
 
     # source, destination 
-    dump(classifier, 'knnPrediction.joblib')  
-    knnPickle.close()
+    dump(classifier, room +'_knnPrediction.joblib')  
     print("Model Saved")
     # #To predict on edge device
     # # load the model from disk
@@ -84,14 +65,14 @@ def generateModel():
     # result = loaded_model.predict(X_test)
     # print(result)
 
-while True:
-    now = datetime.now()
-    dayOfWeek = now.weekday()
-    print(dayOfWeek)
-    if dayOfWeek == 1:
-        #generate model
-        print("generating model")
-        generateModel()
-    #wait to check day
-    print("Awaiting next day...")
-    sleep(60*60*24)
+# while True:
+#     now = datetime.now()
+#     dayOfWeek = now.weekday()
+#     print(dayOfWeek)
+#     if dayOfWeek == 1:
+#         #generate model
+#         print("generating model")
+#         generateModel()
+#     #wait to check day
+#     print("Awaiting next day...")
+#     sleep(60*60*24)
