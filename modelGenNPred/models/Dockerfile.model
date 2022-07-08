@@ -6,11 +6,12 @@ VOLUME D:/Git Repos/3004_G25_Smart_Home_Automation
 RUN python3 -m ensurepip
 
 RUN pip3 install joblib
-RUN pip3 install mysqlclient
+RUN pip3 install mariadb
+RUN pip3 install sklearn
 
 
-COPY dataRetrieve.py .models/dataRetrieve.py
-COPY generateModel.py .models/generateModel.py
+COPY modelGenNPred/models/dataRetrieve.py ./models/dataRetrieve.py
+COPY modelGenNPred/models/generateModel.py .models/generateModel.py
 
 CMD [ "python", ".models/dataRetrieve.py"]
 

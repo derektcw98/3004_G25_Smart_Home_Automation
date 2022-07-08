@@ -1,0 +1,81 @@
+# kubectl create -f grpc-deployment.yaml
+# kubectl get pod
+# kubectl exec -it grpc-xxxxxxxxxxxxxx /bin/sh
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grpc-pv-claim
+  labels:
+    app: grpc
+spec:
+  resources:
+    requests:
+      storage: 5Gi
+  # volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  # persistentVolumeReclaimPolicy: Recycle
+  # storageClassName: slow
+  # mountOptions:
+  #   - hard
+  #   - nfsvers=4.1
+  # nfs:
+  #   path: /tmp
+  #   server: 172.17.0.2
+
+---
+# grpc service
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-service
+  labels:
+    app: grpc
+spec:
+  selector:
+    app: grpc
+  ports:
+    # - protocol: "TCP"
+    - name: grpc-port
+      port: 50051
+      targetPort: 50051
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc
+  labels:
+    layer: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grpc
+  template:
+    metadata:
+      labels:
+        app: grpc
+    spec:
+      containers:
+        - name: grpc
+          image: owlcats/grpc_server:v1.2
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: grpc-persistent
+              mountPath: /grpc/server
+          ports:
+            - name: grpc-port
+              containerPort: 50051
+          env:
+            - name: GRPC_PORT
+              value: "50051"
+            - name: LOG_LEVEL
+              value: INFO
+      volumes:
+        - name: grpc-persistent
+          persistentVolumeClaim:
+            claimName: grpc-pv-claim
