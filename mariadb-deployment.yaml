@@ -99,6 +99,8 @@ spec:
                   optional: false
             - name: MYSQL_DATABASE
               value: homedb
+            - name: TZ
+              value: Asia/Singapore
 
       volumes:
         - name: mariadb-persistent
