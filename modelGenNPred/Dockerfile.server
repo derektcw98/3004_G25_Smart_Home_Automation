@@ -8,8 +8,8 @@ COPY ./requirements.txt /requirements.txt
 RUN pip3 install -r /requirements.txt
 RUN pip3 install --upgrade google-api-python-client
 
-COPY ./server grpc/server
-COPY ./sharedDirectory grpc/sharedDirectory
+COPY modelGenNPred/server grpc/server
+COPY modelGenNPred/sharedDirectory grpc/sharedDirectory
 
 EXPOSE 50051
 

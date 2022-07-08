@@ -18,9 +18,9 @@ RUN pip3 install mysqlclient
 RUN apt-get -y install python3-sklearn
 
 
-COPY /models/dataRetrieve.py /root/models/dataRetrieve.py
-COPY /models/generateModel.py /root/models/generateModel.py
-COPY sharedDirectory /root/models/sharedDirectory
+COPY modelGenNPred/models/dataRetrieve.py /root/models/dataRetrieve.py
+COPY modelGenNPred/models/generateModel.py /root/models/generateModel.py
+COPY modelGenNPred/sharedDirectory /root/models/sharedDirectory
 
 ENV HOME /root/models
 WORKDIR /root/models
