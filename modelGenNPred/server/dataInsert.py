@@ -7,16 +7,17 @@ import sqlalchemy
 # mysql --host=192.168.1.16 --port=3306 -u root -p
 
 
-def engine(): #TODO:remove params
+def engine():  # TODO:remove params
     engine = sqlalchemy.create_engine(
-        #TODO: replace user, password, host, database to environmental variables
-        f"mysql+mysqldb://root:mariasama@192.168.1.24:3306/homedb", pool_recycle=3600) 
+        # TODO: replace user, password, host, database to environmental variables
+        f"mysql+mysqldb://root:mariasama@192.168.1.24:3306/homedb", pool_recycle=3600)
 
     if engine.connect():
         print("Connected")
     else:
-        print("Failed to connect")    
+        print("Failed to connect")
     return engine
+
 
 def insert(filepath):
     conn = engine()
@@ -33,5 +34,3 @@ def insert(filepath):
         df['date'] = now
         df.to_sql('sensors', conn, if_exists='append', index=False)
         print("Inserted")
-
-# weekly csv file using sensorlogger.py > save into containerised maria > query week/month's worth of data
