@@ -12,3 +12,5 @@ COPY ./modelGenNPred/server grpc/server
 COPY ./modelGenNPred/sharedDirectory grpc/sharedDirectory
 
 EXPOSE 50051
+
+CMD [ "python", "./grpc/server/rpi_server.py"]
