@@ -1,9 +1,6 @@
 # This is for generating model on server
 FROM debian
 
-# VOLUME D:/Git Repos/3004_G25_Smart_Home_Automation
-# VOLUME "sharedDirectory:/sharedDirectory"
-
 RUN \
   apt-get update && \
   apt-get -y upgrade && \
@@ -19,12 +16,12 @@ RUN pip3 install mysqlclient
 RUN apt-get -y install python3-sklearn
 RUN apt-get install nano
 
-
 COPY modelGenNPred/models/dataRetrieve.py models/dataRetrieve.py
 COPY modelGenNPred/models/generateModel.py models/generateModel.py
 
 ENV HOME /models
 WORKDIR /models
+ENV TZ="Asia/Singapore"
 
 CMD [ "python3", "/root/models/dataRetrieve.py"]
 

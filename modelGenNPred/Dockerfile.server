@@ -1,8 +1,5 @@
 FROM debian
 
-
-# VOLUME "sharedDirectory:/sharedDirectory"
-
 RUN \
   apt-get update && \
   apt-get -y upgrade && \
@@ -25,6 +22,7 @@ COPY modelGenNPred/server grpc/server
 
 EXPOSE 50051
 ENV HOME /grpc
+ENV TZ="Asia/Singapore"
 WORKDIR /grpc
 
 CMD [ "python3", "./server/rpi_server.py"]
