@@ -1,0 +1,16 @@
+FROM nickgryg/alpine-pandas
+
+RUN apk update
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+
+COPY ./requirements.txt /requirements.txt
+RUN pip3 install -r /requirements.txt
+RUN pip3 install --upgrade google-api-python-client
+
+COPY ./server grpc/server
+COPY ./sharedDirectory grpc/sharedDirectory
+
+EXPOSE 50051
+
+CMD [ "python", "./grpc/server/rpi_server.py"]
