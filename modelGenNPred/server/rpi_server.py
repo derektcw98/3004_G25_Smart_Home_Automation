@@ -46,7 +46,8 @@ class RPI(rpi_pb2_grpc.RPIServicer):
         room_name = request.roomName
         room_data = request.csvdata
         startOfWeek_dmy = datetime.now().strftime("%d%m%Y")
-        file_path = room_name + "_" + str(startOfWeek_dmy) + ".csv"
+        cwd = Path(os.getcwd())    
+        file_path = str(cwd.parent.absolute())+"/sharedDirectory/"+room_name + "_" + str(startOfWeek_dmy) + ".csv"
         file_path = Path(file_path)
         file_path.touch(exist_ok=True)
         with  open(file_path, 'w') as file:

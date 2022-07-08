@@ -4,6 +4,7 @@ import pandas as pd
 import sqlalchemy
 from generateModel import generateModel
 from pathlib import Path
+import os
 
 # pip install mysqlclient
 # access mariadb
@@ -80,7 +81,8 @@ if __name__ == '__main__':
             for room in roomDF['room']:
                 roomData = retrieveMonthPandas(engine, room)
                 roomsDict[room] = roomData
-                file_path = room + "_training_data.csv"
+                cwd = Path(os.getcwd())
+                file_path = str(cwd.parent.absolute())+"/sharedDirectory/"+room+"_training_data.csv"
                 file_path = Path(file_path)
                 file_path.touch(exist_ok=True)
                 with  open(file_path, 'w') as file:
