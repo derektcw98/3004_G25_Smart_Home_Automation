@@ -7,9 +7,9 @@ import sqlalchemy
 # mysql --host=192.168.1.16 --port=3306 -u root -p
 
 
-def engine(host, port, database, user, password): #remove params
+def engine(host, port, database, user, password): #TODO:remove params
     engine = sqlalchemy.create_engine(
-        #replace user, password, host, database to environmental variables
+        #TODO: replace user, password, host, database to environmental variables
         f"mysql+mysqldb://{user}:{password}@{host}/{database}", pool_recycle=3600) 
 
     if engine.connect():
