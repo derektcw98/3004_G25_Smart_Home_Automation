@@ -47,8 +47,8 @@ class RPI(rpi_pb2_grpc.RPIServicer):
         room_data = request.csvdata
         startOfWeek_dmy = datetime.now().strftime("%d%m%Y")
         file_path = room_name + "_" + str(startOfWeek_dmy) + ".csv"
-        path = Path(file_path)
-        path.touch(exist_ok=True)
+        file_path = Path(file_path)
+        file_path.touch(exist_ok=True)
         with  open(file_path, 'w') as file:
             file.write(room_data)
         
