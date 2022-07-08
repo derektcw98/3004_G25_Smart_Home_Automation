@@ -3,6 +3,7 @@ from time import sleep
 import pandas as pd
 import sqlalchemy
 from generateModel import generateModel
+from pathlib import Path
 
 # pip install mysqlclient
 # access mariadb
@@ -53,6 +54,7 @@ def retrieve2MonthPandas(engine, room):
 
     twoMonthDF = pd.read_sql_query(
         sql=query, con=engine, params={"roomname": room})
+
     print(room+'_'+"noclass.csv written")
     return twoMonthDF
 
@@ -82,6 +84,11 @@ if __name__ == '__main__':
             for room in roomDF['room']:
                 roomData = retrieveMonthPandas(engine, room)
                 roomsDict[room] = roomData
+                file_path = room + "_training_data.csv"
+                path = Path(file_path)
+                path.touch(exist_ok=True)
+                with  open(file_path, 'w') as file:
+                    file.write(roomData.to_string())
 
             for roomKey in roomsDict:
                 generateModel(roomKey, roomsDict[roomKey])
