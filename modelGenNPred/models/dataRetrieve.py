@@ -26,22 +26,20 @@ def engine(host, port, database, user, password):
 def retrieveWeekPandas(engine, room):
     conn = engine.raw_connection()
     c = conn.cursor()
-    query = """SELECT day, hour, minute, temperature, humidity, aircon_temp, room from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 1 week) and curdate()"""
+    query = """SELECT day, hour, minute, temperature, humidity, aircon_temp, room, label from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 1 week) and curdate()"""
 
     weekDF = pd.read_sql_query(
         sql=query, con=engine, params={"roomname": room})
-    print(room+'_'+"noclass.csv written")
     return weekDF
 
 
 def retrieveMonthPandas(engine, room):
     conn = engine.raw_connection()
     c = conn.cursor()
-    query = """SELECT day, hour, minute, temperature, humidity, aircon_temp, room from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 1 month) and curdate()"""
+    query = """SELECT day, hour, minute, temperature, humidity, aircon_temp, room, label from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 1 month) and curdate()"""
 
     monthDF = pd.read_sql_query(
         sql=query, con=engine, params={"roomname": room})
-    print(room+'_'+"noclass.csv written")
     return monthDF
 
 
@@ -50,19 +48,17 @@ def retrieve2MonthPandas(engine, room):
     # Save above to a dataframe object twoMonthDF
     conn = engine.raw_connection()
     c = conn.cursor()
-    query = """SELECT day, hour, minute, temperature, humidity, aircon_temp, room from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 2 month) and curdate()"""
+    query = """SELECT day, hour, minute, temperature, humidity, aircon_temp, room, label from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 2 month) and curdate()"""
 
     twoMonthDF = pd.read_sql_query(
         sql=query, con=engine, params={"roomname": room})
-
-    print(room+'_'+"noclass.csv written")
     return twoMonthDF
 
 
 if __name__ == '__main__':
     # localhost should be replaced with env variable
     engine = engine('192.168.1.24', 3306, 'homedb', 'root', 'mariasama')
-    engine.execute("create table if not exists sensors (date DATE NOT NULL, day int NOT NULL, hour int NOT NULL, minute int NOT NULL, temperature double NOT NULL, humidity double NOT NULL, light_state tinyint(1) NOT NULL, aircon_state tinyint(1) NOT NULL, aircon_temp int NOT NULL, room varchar(9) NOT NULL, class char(4) NOT NULL)")
+    engine.execute("create table if not exists sensors (date DATE NOT NULL, day int NOT NULL, hour int NOT NULL, minute int NOT NULL, temperature double NOT NULL, humidity double NOT NULL, light_state tinyint(1) NOT NULL, aircon_state tinyint(1) NOT NULL, aircon_temp int NOT NULL, room varchar(9) NOT NULL, label char(4) NOT NULL)")
     while True:
         now = datetime.now()
         dayOfWeek = int(now.weekday())
@@ -89,6 +85,7 @@ if __name__ == '__main__':
                 path.touch(exist_ok=True)
                 with  open(file_path, 'w') as file:
                     file.write(roomData.to_string())
+                print(file_path+" written.")
 
             for roomKey in roomsDict:
                 generateModel(roomKey, roomsDict[roomKey])
