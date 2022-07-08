@@ -3,9 +3,14 @@ FROM jupyter/scipy-notebook
 
 VOLUME D:/Git Repos/3004_G25_Smart_Home_Automation
 
-RUN pip install joblib
+RUN python3 -m ensurepip
 
-COPY generateModel.py ./generateModel.py
+RUN pip3 install joblib
+RUN pip3 install mysqlclient
 
-RUN python3 generateModel.py
+
+COPY dataRetrieve.py .models/dataRetrieve.py
+COPY generateModel.py .models/generateModel.py
+
+CMD [ "python", ".models/dataRetrieve.py"]
 
