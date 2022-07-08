@@ -81,8 +81,8 @@ if __name__ == '__main__':
                 roomData = retrieveMonthPandas(engine, room)
                 roomsDict[room] = roomData
                 file_path = room + "_training_data.csv"
-                path = Path(file_path)
-                path.touch(exist_ok=True)
+                file_path = Path(file_path)
+                file_path.touch(exist_ok=True)
                 with  open(file_path, 'w') as file:
                     file.write(roomData.to_string())
                 print(file_path+" written.")

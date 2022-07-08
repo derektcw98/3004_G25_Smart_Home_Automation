@@ -1,3 +1,4 @@
+import pathlib
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -14,7 +15,7 @@ def generateModel(room,dataframe):
 
     ## Label generation done on client instead ##
     # labels = []
-
+    
     # Add in column names
     # day of week, time, temperature, humidity, light on/off, aircon on/off, aircon temp, room, label
     df.columns = ["day", "hour", "minute", "temperature", "humidity", "aircon_temp", "room", "label"]
@@ -61,6 +62,7 @@ def generateModel(room,dataframe):
     # source, destination 
     cwd = Path(os.getcwd())    
     model_path = str(cwd.parent.absolute())+"\\sharedDirectory\\"+room+"_knnPrediction.joblib"
+    model_path = Path(model_path)
     dump(classifier, model_path)  
     print("Model Saved")
     # #To predict on edge device

@@ -22,7 +22,7 @@ def predictClass(roomName, dataToPredict):
     # load the model from disk
     cwd = Path(os.getcwd())    
     model_path = str(cwd.parent.absolute())+"\\sharedDirectory\\"+roomName+"_knnPrediction.joblib"
-
+    model_path = Path(model_path)
     loaded_model = load(open(model_path, 'rb')) #knnPrediction can be replaced with newer model
     result = loaded_model.predict(X)#[[6,9,50,21,23.68,0,0,24]] this is one data
     nearest = loaded_model.kneighbors(X)[1] #returns index of neighbors
@@ -31,6 +31,7 @@ def predictClass(roomName, dataToPredict):
 
     # get original csv that model generated from
     csv_path = str(cwd.parent.absolute())+"\\sharedDirectory\\"+roomName+"_training_data.csv"
+    csv_path = Path(csv_path)
     checkTempData = pd.read_csv(csv_path, header= None)
     checkTempData.columns = ["day", "hour", "minute", "temperature", "humidity", "light_state", "aircon_state", "aircon_temp", "room", "label"]
     dataForTemp = checkTempData["aircon_temp"]
