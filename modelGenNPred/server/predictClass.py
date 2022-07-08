@@ -32,16 +32,8 @@ def predictClass(roomName, dataToPredict):
     # get original csv that model generated from
     csv_path = str(cwd.parent.absolute())+"\\sharedDirectory\\"+roomName+"_training_data.csv"
     checkTempData = pd.read_csv(csv_path, header= None)
-    checkTempData.columns = ["day", "hour", "minute", "temperature", "humidity", "light_state", "aircon_state", "aircon_temp", "room"]
-    dataForTemp = checkTempData
-    dataForTemp = dataForTemp.drop('day', axis = 1)
-    dataForTemp = dataForTemp.drop('hour', axis = 1)
-    dataForTemp = dataForTemp.drop('minute', axis = 1)
-    dataForTemp = dataForTemp.drop('temperature', axis = 1)
-    dataForTemp = dataForTemp.drop('humidity', axis = 1)
-    dataForTemp = dataForTemp.drop('light_state', axis = 1)
-    dataForTemp = dataForTemp.drop('aircon_state', axis = 1)
-    dataForTemp = dataForTemp.drop('room', axis = 1)
+    checkTempData.columns = ["day", "hour", "minute", "temperature", "humidity", "light_state", "aircon_state", "aircon_temp", "room", "label"]
+    dataForTemp = checkTempData["aircon_temp"]
 
     # Get average temp
     temp = 0
