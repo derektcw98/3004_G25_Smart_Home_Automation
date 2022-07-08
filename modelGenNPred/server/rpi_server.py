@@ -17,7 +17,9 @@ import logging
 import sys
 from pathlib import Path
 from datetime import datetime, timedelta
-
+from io import StringIO
+import pandas as pd
+from dataInsert import insert
 from predictClass import predictClass
 
 import grpc
@@ -43,13 +45,15 @@ class RPI(rpi_pb2_grpc.RPIServicer):
         #Upload data to database
         room_name = request.roomName
         room_data = request.csvdata
-
         startOfWeek_dmy = datetime.now().strftime("%d%m%Y")
         file_path = room_name + "_" + str(startOfWeek_dmy) + ".csv"
         path = Path(file_path)
         path.touch(exist_ok=True)
         with  open(file_path, 'w') as file:
             file.write(room_data)
+        
+        insert(file_path)
+
         result = "Data has been successfully received by server"
         return rpi_pb2.Reply(res=result)
 
