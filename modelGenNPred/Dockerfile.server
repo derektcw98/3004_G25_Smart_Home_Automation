@@ -1,5 +1,8 @@
 FROM debian
 
+
+# VOLUME "sharedDirectory:/sharedDirectory"
+
 RUN \
   apt-get update && \
   apt-get -y upgrade && \
@@ -12,13 +15,13 @@ RUN apt-get -y install python3-sqlalchemy
 RUN apt-get -y install mariadb-server
 RUN apt-get -y install python3-dev default-libmysqlclient-dev build-essential
 RUN pip3 install mysqlclient
+RUN apt-get install nano
 
 COPY ./requirements.txt /requirements.txt
 RUN pip3 install -r /requirements.txt
 RUN pip3 install --upgrade google-api-python-client
 
-COPY ./server grpc/server
-COPY ./sharedDirectory grpc/sharedDirectory
+COPY modelGenNPred/server grpc/server
 
 EXPOSE 50051
 ENV HOME /grpc
