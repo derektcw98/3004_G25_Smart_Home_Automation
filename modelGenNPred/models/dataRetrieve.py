@@ -25,7 +25,7 @@ def engine(host, port, database, user, password):
 def retrieveWeekPandas(engine, room):
     conn = engine.raw_connection()
     c = conn.cursor()
-    query = """SELECT day, hour, minute, temperature, humidity, aircon_state, aircon_temp, room from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 1 week) and curdate()"""
+    query = """SELECT day, hour, minute, temperature, humidity, aircon_temp, room from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 1 week) and curdate()"""
 
     weekDF = pd.read_sql_query(
         sql=query, con=engine, params={"roomname": room})
@@ -36,7 +36,7 @@ def retrieveWeekPandas(engine, room):
 def retrieveMonthPandas(engine, room):
     conn = engine.raw_connection()
     c = conn.cursor()
-    query = """SELECT day, hour, minute, temperature, humidity, aircon_state, aircon_temp, room from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 1 month) and curdate()"""
+    query = """SELECT day, hour, minute, temperature, humidity, aircon_temp, room from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 1 month) and curdate()"""
 
     monthDF = pd.read_sql_query(
         sql=query, con=engine, params={"roomname": room})
@@ -49,7 +49,7 @@ def retrieve2MonthPandas(engine, room):
     # Save above to a dataframe object twoMonthDF
     conn = engine.raw_connection()
     c = conn.cursor()
-    query = """SELECT day, hour, minute, temperature, humidity, aircon_state, aircon_temp, room from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 2 month) and curdate()"""
+    query = """SELECT day, hour, minute, temperature, humidity, aircon_temp, room from sensors where room = %(roomname)s AND date(date) between (curdate() - interval 2 month) and curdate()"""
 
     twoMonthDF = pd.read_sql_query(
         sql=query, con=engine, params={"roomname": room})
